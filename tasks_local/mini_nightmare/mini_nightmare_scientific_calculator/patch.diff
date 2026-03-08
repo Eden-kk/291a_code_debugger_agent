@@ -1,0 +1,45 @@
+--- a/src/scientific_calculator.py
++++ b/src/scientific_calculator.py
+@@ -1,8 +1,9 @@
+-from scientific_calculator_tool import EnvironmentTool
++from .scientific_calculator_tool import EnvironmentTool
+ 
+ 
+ class PlusTool(EnvironmentTool):
+     name: str = "plus"
++    action: str = "plus"
+     action_str = "```plus"
+     instructions = {
+         "template": "```plus <number1> <number2>```",
+@@ -15,16 +16,22 @@
+     }
+ 
+     def use(self, input_text):
+-        # parse the input text
++        """Parse the input string and return the sum or an error message.
++
++        Expected format: ```plus <number1> <number2>```
++        """
++        # Ensure the string starts and ends with the expected backticks
++        if not (input_text.startswith("```plus") and input_text.endswith("```")):
++            return "SyntaxError: invalid syntax."
++        # Extract the part after the command and before the trailing backticks
++        inner = input_text[len("```plus"): -3].strip()
++        parts = inner.split()
++        if len(parts) != 2:
++            return "SyntaxError: invalid syntax."
++        a, b = parts
+         try:
+-            numbers = input_text.split(self.action)[1].split("```")[0].strip()
+-        except:
+-            return "SyntaxError: invalid syntax."
+-        number_1, number_2 = numbers.split()
+-        # calculate the result
+-        try:
+-            result = int(number_1) + int(number_2)
+-        except:
++            result = int(a) + int(b)
++        except ValueError:
+             return "ValueError: invalid value."
+         return result
+         

@@ -1,0 +1,29 @@
+--- a/src/solution.py
++++ b/src/solution.py
+@@ -6,16 +6,16 @@
+ import bisect
+ 
+ class Solution:
+-def gridGame(self, grid: List[List[int]]) -> int: 
+-    result = float("inf")
+-    left,right = 0,sum(grid[0])
++    def gridGame(self, grid: List[List[int]]) -> int: 
++        result = float("inf")
++        left,right = 0,sum(grid[0])
+ 
+-    for a,b in zip(grid[0],grid[1]):
+-        right-=a
++        for a,b in zip(grid[0],grid[1]):
++            right-=a
+ 
+-        result = min(result,max(left,right))
+-        left+=b
++            result = min(result,max(left,right))
++            left+=b
++        
++        return result
+ 
+-    return result
+-
+-# time & space - O(n),O(1)
++# time & space - O(n),O(1)

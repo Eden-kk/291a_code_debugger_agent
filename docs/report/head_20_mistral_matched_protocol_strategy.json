@@ -1,0 +1,685 @@
+{
+  "metadata": {
+    "task_ids": [
+      "debugbench_004_reverse_bits",
+      "debugbench_012_corporate_flight_bookings",
+      "debugbench_017_find_mode_in_binary_search_tree",
+      "debugbench_018_valid_arrangement_of_pairs",
+      "debugbench_031_next_greater_element_i",
+      "debugbench_037_minimum_bit_flips_to_convert_number",
+      "debugbench_039_grid_game",
+      "mini_nightmare_patcher",
+      "mini_nightmare_purr",
+      "mini_nightmare_scientific_calculator",
+      "mini_nightmare_tomorrow_date",
+      "quixbugs_find_first_in_sorted",
+      "quixbugs_find_in_sorted",
+      "quixbugs_is_valid_parenthesization",
+      "quixbugs_knapsack",
+      "quixbugs_mergesort",
+      "quixbugs_next_palindrome",
+      "quixbugs_quicksort",
+      "quixbugs_to_base",
+      "quixbugs_wrap"
+    ],
+    "n_tasks": 20,
+    "model": "api-mistral-small-3.2-2506",
+    "backend": "tritonai",
+    "seed": 42,
+    "max_turns": 25,
+    "max_total_tokens": 50000
+  },
+  "summaries": {
+    "act_only::baseline": {
+      "protocol": "act_only",
+      "strategy": "baseline",
+      "n": 20,
+      "pass": 5,
+      "fail": 15,
+      "pass_pct": 25.0,
+      "avg_tokens": 41638.1,
+      "avg_turns": 14.2,
+      "family_breakdown": {
+        "DebugBench": {
+          "pass": 0,
+          "n": 7,
+          "pass_pct": 0.0
+        },
+        "Mini-nightmare": {
+          "pass": 0,
+          "n": 4,
+          "pass_pct": 0.0
+        },
+        "QuixBugs": {
+          "pass": 5,
+          "n": 9,
+          "pass_pct": 55.6
+        }
+      }
+    },
+    "act_only::checklist": {
+      "protocol": "act_only",
+      "strategy": "checklist",
+      "n": 20,
+      "pass": 7,
+      "fail": 13,
+      "pass_pct": 35.0,
+      "avg_tokens": 38778.3,
+      "avg_turns": 13.2,
+      "family_breakdown": {
+        "DebugBench": {
+          "pass": 0,
+          "n": 7,
+          "pass_pct": 0.0
+        },
+        "Mini-nightmare": {
+          "pass": 1,
+          "n": 4,
+          "pass_pct": 25.0
+        },
+        "QuixBugs": {
+          "pass": 6,
+          "n": 9,
+          "pass_pct": 66.7
+        }
+      }
+    },
+    "act_only::early_stop_restart": {
+      "protocol": "act_only",
+      "strategy": "early_stop_restart",
+      "n": 20,
+      "pass": 7,
+      "fail": 13,
+      "pass_pct": 35.0,
+      "avg_tokens": 41824.8,
+      "avg_turns": 19.3,
+      "family_breakdown": {
+        "DebugBench": {
+          "pass": 2,
+          "n": 7,
+          "pass_pct": 28.6
+        },
+        "Mini-nightmare": {
+          "pass": 0,
+          "n": 4,
+          "pass_pct": 0.0
+        },
+        "QuixBugs": {
+          "pass": 5,
+          "n": 9,
+          "pass_pct": 55.6
+        }
+      }
+    },
+    "act_only::self_consistency": {
+      "protocol": "act_only",
+      "strategy": "self_consistency",
+      "n": 20,
+      "pass": 5,
+      "fail": 15,
+      "pass_pct": 25.0,
+      "avg_tokens": 45586.2,
+      "avg_turns": 23.9,
+      "family_breakdown": {
+        "DebugBench": {
+          "pass": 0,
+          "n": 7,
+          "pass_pct": 0.0
+        },
+        "Mini-nightmare": {
+          "pass": 0,
+          "n": 4,
+          "pass_pct": 0.0
+        },
+        "QuixBugs": {
+          "pass": 5,
+          "n": 9,
+          "pass_pct": 55.6
+        }
+      }
+    },
+    "react::baseline": {
+      "protocol": "react",
+      "strategy": "baseline",
+      "n": 20,
+      "pass": 7,
+      "fail": 13,
+      "pass_pct": 35.0,
+      "avg_tokens": 39140.8,
+      "avg_turns": 12.6,
+      "family_breakdown": {
+        "DebugBench": {
+          "pass": 1,
+          "n": 7,
+          "pass_pct": 14.3
+        },
+        "Mini-nightmare": {
+          "pass": 0,
+          "n": 4,
+          "pass_pct": 0.0
+        },
+        "QuixBugs": {
+          "pass": 6,
+          "n": 9,
+          "pass_pct": 66.7
+        }
+      }
+    },
+    "react::checklist": {
+      "protocol": "react",
+      "strategy": "checklist",
+      "n": 20,
+      "pass": 5,
+      "fail": 15,
+      "pass_pct": 25.0,
+      "avg_tokens": 44034.3,
+      "avg_turns": 13.9,
+      "family_breakdown": {
+        "DebugBench": {
+          "pass": 0,
+          "n": 7,
+          "pass_pct": 0.0
+        },
+        "Mini-nightmare": {
+          "pass": 0,
+          "n": 4,
+          "pass_pct": 0.0
+        },
+        "QuixBugs": {
+          "pass": 5,
+          "n": 9,
+          "pass_pct": 55.6
+        }
+      }
+    },
+    "react::early_stop_restart": {
+      "protocol": "react",
+      "strategy": "early_stop_restart",
+      "n": 20,
+      "pass": 9,
+      "fail": 11,
+      "pass_pct": 45.0,
+      "avg_tokens": 36770.1,
+      "avg_turns": 15.7,
+      "family_breakdown": {
+        "DebugBench": {
+          "pass": 2,
+          "n": 7,
+          "pass_pct": 28.6
+        },
+        "Mini-nightmare": {
+          "pass": 0,
+          "n": 4,
+          "pass_pct": 0.0
+        },
+        "QuixBugs": {
+          "pass": 7,
+          "n": 9,
+          "pass_pct": 77.8
+        }
+      }
+    },
+    "react::self_consistency": {
+      "protocol": "react",
+      "strategy": "self_consistency",
+      "n": 20,
+      "pass": 8,
+      "fail": 12,
+      "pass_pct": 40.0,
+      "avg_tokens": 42328.6,
+      "avg_turns": 21.1,
+      "family_breakdown": {
+        "DebugBench": {
+          "pass": 2,
+          "n": 7,
+          "pass_pct": 28.6
+        },
+        "Mini-nightmare": {
+          "pass": 0,
+          "n": 4,
+          "pass_pct": 0.0
+        },
+        "QuixBugs": {
+          "pass": 6,
+          "n": 9,
+          "pass_pct": 66.7
+        }
+      }
+    },
+    "reflexion::baseline": {
+      "protocol": "reflexion",
+      "strategy": "baseline",
+      "n": 20,
+      "pass": 6,
+      "fail": 14,
+      "pass_pct": 30.0,
+      "avg_tokens": 39581.9,
+      "avg_turns": 13.8,
+      "family_breakdown": {
+        "DebugBench": {
+          "pass": 1,
+          "n": 7,
+          "pass_pct": 14.3
+        },
+        "Mini-nightmare": {
+          "pass": 0,
+          "n": 4,
+          "pass_pct": 0.0
+        },
+        "QuixBugs": {
+          "pass": 5,
+          "n": 9,
+          "pass_pct": 55.6
+        }
+      }
+    },
+    "reflexion::checklist": {
+      "protocol": "reflexion",
+      "strategy": "checklist",
+      "n": 20,
+      "pass": 4,
+      "fail": 16,
+      "pass_pct": 20.0,
+      "avg_tokens": 45406.2,
+      "avg_turns": 15.3,
+      "family_breakdown": {
+        "DebugBench": {
+          "pass": 0,
+          "n": 7,
+          "pass_pct": 0.0
+        },
+        "Mini-nightmare": {
+          "pass": 0,
+          "n": 4,
+          "pass_pct": 0.0
+        },
+        "QuixBugs": {
+          "pass": 4,
+          "n": 9,
+          "pass_pct": 44.4
+        }
+      }
+    },
+    "reflexion::early_stop_restart": {
+      "protocol": "reflexion",
+      "strategy": "early_stop_restart",
+      "n": 20,
+      "pass": 8,
+      "fail": 12,
+      "pass_pct": 40.0,
+      "avg_tokens": 39142.8,
+      "avg_turns": 17.1,
+      "family_breakdown": {
+        "DebugBench": {
+          "pass": 1,
+          "n": 7,
+          "pass_pct": 14.3
+        },
+        "Mini-nightmare": {
+          "pass": 0,
+          "n": 4,
+          "pass_pct": 0.0
+        },
+        "QuixBugs": {
+          "pass": 7,
+          "n": 9,
+          "pass_pct": 77.8
+        }
+      }
+    },
+    "reflexion::self_consistency": {
+      "protocol": "reflexion",
+      "strategy": "self_consistency",
+      "n": 20,
+      "pass": 9,
+      "fail": 11,
+      "pass_pct": 45.0,
+      "avg_tokens": 37287.6,
+      "avg_turns": 19.3,
+      "family_breakdown": {
+        "DebugBench": {
+          "pass": 2,
+          "n": 7,
+          "pass_pct": 28.6
+        },
+        "Mini-nightmare": {
+          "pass": 0,
+          "n": 4,
+          "pass_pct": 0.0
+        },
+        "QuixBugs": {
+          "pass": 7,
+          "n": 9,
+          "pass_pct": 77.8
+        }
+      }
+    }
+  },
+  "ranking": [
+    {
+      "protocol": "react",
+      "strategy": "early_stop_restart",
+      "n": 20,
+      "pass": 9,
+      "fail": 11,
+      "pass_pct": 45.0,
+      "avg_tokens": 36770.1,
+      "avg_turns": 15.7,
+      "family_breakdown": {
+        "DebugBench": {
+          "pass": 2,
+          "n": 7,
+          "pass_pct": 28.6
+        },
+        "Mini-nightmare": {
+          "pass": 0,
+          "n": 4,
+          "pass_pct": 0.0
+        },
+        "QuixBugs": {
+          "pass": 7,
+          "n": 9,
+          "pass_pct": 77.8
+        }
+      }
+    },
+    {
+      "protocol": "reflexion",
+      "strategy": "self_consistency",
+      "n": 20,
+      "pass": 9,
+      "fail": 11,
+      "pass_pct": 45.0,
+      "avg_tokens": 37287.6,
+      "avg_turns": 19.3,
+      "family_breakdown": {
+        "DebugBench": {
+          "pass": 2,
+          "n": 7,
+          "pass_pct": 28.6
+        },
+        "Mini-nightmare": {
+          "pass": 0,
+          "n": 4,
+          "pass_pct": 0.0
+        },
+        "QuixBugs": {
+          "pass": 7,
+          "n": 9,
+          "pass_pct": 77.8
+        }
+      }
+    },
+    {
+      "protocol": "reflexion",
+      "strategy": "early_stop_restart",
+      "n": 20,
+      "pass": 8,
+      "fail": 12,
+      "pass_pct": 40.0,
+      "avg_tokens": 39142.8,
+      "avg_turns": 17.1,
+      "family_breakdown": {
+        "DebugBench": {
+          "pass": 1,
+          "n": 7,
+          "pass_pct": 14.3
+        },
+        "Mini-nightmare": {
+          "pass": 0,
+          "n": 4,
+          "pass_pct": 0.0
+        },
+        "QuixBugs": {
+          "pass": 7,
+          "n": 9,
+          "pass_pct": 77.8
+        }
+      }
+    },
+    {
+      "protocol": "react",
+      "strategy": "self_consistency",
+      "n": 20,
+      "pass": 8,
+      "fail": 12,
+      "pass_pct": 40.0,
+      "avg_tokens": 42328.6,
+      "avg_turns": 21.1,
+      "family_breakdown": {
+        "DebugBench": {
+          "pass": 2,
+          "n": 7,
+          "pass_pct": 28.6
+        },
+        "Mini-nightmare": {
+          "pass": 0,
+          "n": 4,
+          "pass_pct": 0.0
+        },
+        "QuixBugs": {
+          "pass": 6,
+          "n": 9,
+          "pass_pct": 66.7
+        }
+      }
+    },
+    {
+      "protocol": "act_only",
+      "strategy": "checklist",
+      "n": 20,
+      "pass": 7,
+      "fail": 13,
+      "pass_pct": 35.0,
+      "avg_tokens": 38778.3,
+      "avg_turns": 13.2,
+      "family_breakdown": {
+        "DebugBench": {
+          "pass": 0,
+          "n": 7,
+          "pass_pct": 0.0
+        },
+        "Mini-nightmare": {
+          "pass": 1,
+          "n": 4,
+          "pass_pct": 25.0
+        },
+        "QuixBugs": {
+          "pass": 6,
+          "n": 9,
+          "pass_pct": 66.7
+        }
+      }
+    },
+    {
+      "protocol": "react",
+      "strategy": "baseline",
+      "n": 20,
+      "pass": 7,
+      "fail": 13,
+      "pass_pct": 35.0,
+      "avg_tokens": 39140.8,
+      "avg_turns": 12.6,
+      "family_breakdown": {
+        "DebugBench": {
+          "pass": 1,
+          "n": 7,
+          "pass_pct": 14.3
+        },
+        "Mini-nightmare": {
+          "pass": 0,
+          "n": 4,
+          "pass_pct": 0.0
+        },
+        "QuixBugs": {
+          "pass": 6,
+          "n": 9,
+          "pass_pct": 66.7
+        }
+      }
+    },
+    {
+      "protocol": "act_only",
+      "strategy": "early_stop_restart",
+      "n": 20,
+      "pass": 7,
+      "fail": 13,
+      "pass_pct": 35.0,
+      "avg_tokens": 41824.8,
+      "avg_turns": 19.3,
+      "family_breakdown": {
+        "DebugBench": {
+          "pass": 2,
+          "n": 7,
+          "pass_pct": 28.6
+        },
+        "Mini-nightmare": {
+          "pass": 0,
+          "n": 4,
+          "pass_pct": 0.0
+        },
+        "QuixBugs": {
+          "pass": 5,
+          "n": 9,
+          "pass_pct": 55.6
+        }
+      }
+    },
+    {
+      "protocol": "reflexion",
+      "strategy": "baseline",
+      "n": 20,
+      "pass": 6,
+      "fail": 14,
+      "pass_pct": 30.0,
+      "avg_tokens": 39581.9,
+      "avg_turns": 13.8,
+      "family_breakdown": {
+        "DebugBench": {
+          "pass": 1,
+          "n": 7,
+          "pass_pct": 14.3
+        },
+        "Mini-nightmare": {
+          "pass": 0,
+          "n": 4,
+          "pass_pct": 0.0
+        },
+        "QuixBugs": {
+          "pass": 5,
+          "n": 9,
+          "pass_pct": 55.6
+        }
+      }
+    },
+    {
+      "protocol": "act_only",
+      "strategy": "baseline",
+      "n": 20,
+      "pass": 5,
+      "fail": 15,
+      "pass_pct": 25.0,
+      "avg_tokens": 41638.1,
+      "avg_turns": 14.2,
+      "family_breakdown": {
+        "DebugBench": {
+          "pass": 0,
+          "n": 7,
+          "pass_pct": 0.0
+        },
+        "Mini-nightmare": {
+          "pass": 0,
+          "n": 4,
+          "pass_pct": 0.0
+        },
+        "QuixBugs": {
+          "pass": 5,
+          "n": 9,
+          "pass_pct": 55.6
+        }
+      }
+    },
+    {
+      "protocol": "react",
+      "strategy": "checklist",
+      "n": 20,
+      "pass": 5,
+      "fail": 15,
+      "pass_pct": 25.0,
+      "avg_tokens": 44034.3,
+      "avg_turns": 13.9,
+      "family_breakdown": {
+        "DebugBench": {
+          "pass": 0,
+          "n": 7,
+          "pass_pct": 0.0
+        },
+        "Mini-nightmare": {
+          "pass": 0,
+          "n": 4,
+          "pass_pct": 0.0
+        },
+        "QuixBugs": {
+          "pass": 5,
+          "n": 9,
+          "pass_pct": 55.6
+        }
+      }
+    },
+    {
+      "protocol": "act_only",
+      "strategy": "self_consistency",
+      "n": 20,
+      "pass": 5,
+      "fail": 15,
+      "pass_pct": 25.0,
+      "avg_tokens": 45586.2,
+      "avg_turns": 23.9,
+      "family_breakdown": {
+        "DebugBench": {
+          "pass": 0,
+          "n": 7,
+          "pass_pct": 0.0
+        },
+        "Mini-nightmare": {
+          "pass": 0,
+          "n": 4,
+          "pass_pct": 0.0
+        },
+        "QuixBugs": {
+          "pass": 5,
+          "n": 9,
+          "pass_pct": 55.6
+        }
+      }
+    },
+    {
+      "protocol": "reflexion",
+      "strategy": "checklist",
+      "n": 20,
+      "pass": 4,
+      "fail": 16,
+      "pass_pct": 20.0,
+      "avg_tokens": 45406.2,
+      "avg_turns": 15.3,
+      "family_breakdown": {
+        "DebugBench": {
+          "pass": 0,
+          "n": 7,
+          "pass_pct": 0.0
+        },
+        "Mini-nightmare": {
+          "pass": 0,
+          "n": 4,
+          "pass_pct": 0.0
+        },
+        "QuixBugs": {
+          "pass": 4,
+          "n": 9,
+          "pass_pct": 44.4
+        }
+      }
+    }
+  ],
+  "missing": []
+}

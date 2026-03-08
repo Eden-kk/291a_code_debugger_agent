@@ -1,0 +1,913 @@
+{
+  "metadata": {
+    "task_ids": [
+      "debugbench_004_reverse_bits",
+      "debugbench_012_corporate_flight_bookings",
+      "debugbench_017_find_mode_in_binary_search_tree",
+      "debugbench_018_valid_arrangement_of_pairs",
+      "debugbench_031_next_greater_element_i",
+      "debugbench_037_minimum_bit_flips_to_convert_number",
+      "debugbench_039_grid_game",
+      "mini_nightmare_patcher",
+      "mini_nightmare_purr",
+      "mini_nightmare_scientific_calculator",
+      "mini_nightmare_tomorrow_date",
+      "quixbugs_find_first_in_sorted",
+      "quixbugs_find_in_sorted",
+      "quixbugs_is_valid_parenthesization",
+      "quixbugs_knapsack",
+      "quixbugs_mergesort",
+      "quixbugs_next_palindrome",
+      "quixbugs_quicksort",
+      "quixbugs_to_base",
+      "quixbugs_wrap"
+    ],
+    "n_tasks": 20,
+    "model": "api-mistral-small-3.2-2506",
+    "backend": "tritonai",
+    "seed": 42,
+    "max_turns": 25,
+    "max_total_tokens": 50000
+  },
+  "summaries": {
+    "react_baseline": {
+      "condition": "react_baseline",
+      "description": "Standard react baseline used as the direct comparison point for Reflexion Ep1.",
+      "n_tasks": 20,
+      "pass": 8,
+      "fail": 12,
+      "pass_pct": 40.0,
+      "avg_tokens": 38305.7,
+      "wall_time_sec": 312.7,
+      "runs": [
+        {
+          "task_id": "debugbench_004_reverse_bits",
+          "success": false,
+          "total_tokens": 55046,
+          "total_turns": 14,
+          "episodes_used": 1,
+          "ep1_success": false,
+          "ep2_success": null,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/debugbench/logic_error/debugbench_004_reverse_bits__react__baseline__h0__20260308_040218.json"
+        },
+        {
+          "task_id": "debugbench_012_corporate_flight_bookings",
+          "success": false,
+          "total_tokens": 50326,
+          "total_turns": 16,
+          "episodes_used": 1,
+          "ep1_success": false,
+          "ep2_success": null,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/debugbench/reference_error/debugbench_012_corporate_flight_bookings__react__baseline__h0__20260308_040230.json"
+        },
+        {
+          "task_id": "debugbench_017_find_mode_in_binary_search_tree",
+          "success": false,
+          "total_tokens": 50884,
+          "total_turns": 18,
+          "episodes_used": 1,
+          "ep1_success": false,
+          "ep2_success": null,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/debugbench/syntax_error/debugbench_017_find_mode_in_binary_search_tree__react__baseline__h0__20260308_040244.json"
+        },
+        {
+          "task_id": "debugbench_018_valid_arrangement_of_pairs",
+          "success": false,
+          "total_tokens": 51382,
+          "total_turns": 19,
+          "episodes_used": 1,
+          "ep1_success": false,
+          "ep2_success": null,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/debugbench/syntax_error/debugbench_018_valid_arrangement_of_pairs__react__baseline__h0__20260308_040254.json"
+        },
+        {
+          "task_id": "debugbench_031_next_greater_element_i",
+          "success": true,
+          "total_tokens": 5691,
+          "total_turns": 4,
+          "episodes_used": 1,
+          "ep1_success": true,
+          "ep2_success": null,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/debugbench/reference_error/debugbench_031_next_greater_element_i__react__baseline__h0__20260308_040303.json"
+        },
+        {
+          "task_id": "debugbench_037_minimum_bit_flips_to_convert_number",
+          "success": false,
+          "total_tokens": 52825,
+          "total_turns": 20,
+          "episodes_used": 1,
+          "ep1_success": false,
+          "ep2_success": null,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/debugbench/syntax_error/debugbench_037_minimum_bit_flips_to_convert_number__react__baseline__h0__20260308_040306.json"
+        },
+        {
+          "task_id": "debugbench_039_grid_game",
+          "success": false,
+          "total_tokens": 50757,
+          "total_turns": 18,
+          "episodes_used": 1,
+          "ep1_success": false,
+          "ep2_success": null,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/debugbench/syntax_error/debugbench_039_grid_game__react__baseline__h0__20260308_040323.json"
+        },
+        {
+          "task_id": "mini_nightmare_patcher",
+          "success": false,
+          "total_tokens": 58041,
+          "total_turns": 13,
+          "episodes_used": 1,
+          "ep1_success": false,
+          "ep2_success": null,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/mini_nightmare/mini_nightmare_patcher__react__baseline__h0__20260308_040347.json"
+        },
+        {
+          "task_id": "mini_nightmare_purr",
+          "success": false,
+          "total_tokens": 51366,
+          "total_turns": 17,
+          "episodes_used": 1,
+          "ep1_success": false,
+          "ep2_success": null,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/mini_nightmare/mini_nightmare_purr__react__baseline__h0__20260308_040402.json"
+        },
+        {
+          "task_id": "mini_nightmare_scientific_calculator",
+          "success": false,
+          "total_tokens": 53437,
+          "total_turns": 19,
+          "episodes_used": 1,
+          "ep1_success": false,
+          "ep2_success": null,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/mini_nightmare/mini_nightmare_scientific_calculator__react__baseline__h0__20260308_040416.json"
+        },
+        {
+          "task_id": "mini_nightmare_tomorrow_date",
+          "success": false,
+          "total_tokens": 55399,
+          "total_turns": 15,
+          "episodes_used": 1,
+          "ep1_success": false,
+          "ep2_success": null,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/mini_nightmare/mini_nightmare_tomorrow_date__react__baseline__h0__20260308_040430.json"
+        },
+        {
+          "task_id": "quixbugs_find_first_in_sorted",
+          "success": true,
+          "total_tokens": 25051,
+          "total_turns": 14,
+          "episodes_used": 1,
+          "ep1_success": true,
+          "ep2_success": null,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/quixbugs/quixbugs_find_first_in_sorted__react__baseline__h0__20260308_040444.json"
+        },
+        {
+          "task_id": "quixbugs_find_in_sorted",
+          "success": false,
+          "total_tokens": 51357,
+          "total_turns": 13,
+          "episodes_used": 1,
+          "ep1_success": false,
+          "ep2_success": null,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/quixbugs/quixbugs_find_in_sorted__react__baseline__h0__20260308_040622.json"
+        },
+        {
+          "task_id": "quixbugs_is_valid_parenthesization",
+          "success": true,
+          "total_tokens": 9195,
+          "total_turns": 6,
+          "episodes_used": 1,
+          "ep1_success": true,
+          "ep2_success": null,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/quixbugs/quixbugs_is_valid_parenthesization__react__baseline__h0__20260308_040635.json"
+        },
+        {
+          "task_id": "quixbugs_knapsack",
+          "success": false,
+          "total_tokens": 50908,
+          "total_turns": 14,
+          "episodes_used": 1,
+          "ep1_success": false,
+          "ep2_success": null,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/quixbugs/quixbugs_knapsack__react__baseline__h0__20260308_040639.json"
+        },
+        {
+          "task_id": "quixbugs_mergesort",
+          "success": true,
+          "total_tokens": 31352,
+          "total_turns": 8,
+          "episodes_used": 1,
+          "ep1_success": true,
+          "ep2_success": null,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/quixbugs/quixbugs_mergesort__react__baseline__h0__20260308_040658.json"
+        },
+        {
+          "task_id": "quixbugs_next_palindrome",
+          "success": true,
+          "total_tokens": 11696,
+          "total_turns": 6,
+          "episodes_used": 1,
+          "ep1_success": true,
+          "ep2_success": null,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/quixbugs/quixbugs_next_palindrome__react__baseline__h0__20260308_040709.json"
+        },
+        {
+          "task_id": "quixbugs_quicksort",
+          "success": true,
+          "total_tokens": 17875,
+          "total_turns": 9,
+          "episodes_used": 1,
+          "ep1_success": true,
+          "ep2_success": null,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/quixbugs/quixbugs_quicksort__react__baseline__h0__20260308_040714.json"
+        },
+        {
+          "task_id": "quixbugs_to_base",
+          "success": true,
+          "total_tokens": 22408,
+          "total_turns": 9,
+          "episodes_used": 1,
+          "ep1_success": true,
+          "ep2_success": null,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/quixbugs/quixbugs_to_base__react__baseline__h0__20260308_040721.json"
+        },
+        {
+          "task_id": "quixbugs_wrap",
+          "success": true,
+          "total_tokens": 11117,
+          "total_turns": 5,
+          "episodes_used": 1,
+          "ep1_success": true,
+          "ep2_success": null,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/quixbugs/quixbugs_wrap__react__baseline__h0__20260308_040727.json"
+        }
+      ]
+    },
+    "reflexion_baseline": {
+      "condition": "reflexion_baseline",
+      "description": "Current reflexion baseline: Ep1 + generated reflection + clean Ep2 restart.",
+      "n_tasks": 20,
+      "pass": 8,
+      "fail": 12,
+      "pass_pct": 40.0,
+      "avg_tokens": 37229.6,
+      "wall_time_sec": 351.4,
+      "runs": [
+        {
+          "task_id": "debugbench_004_reverse_bits",
+          "success": false,
+          "total_tokens": 57793,
+          "total_turns": 15,
+          "episodes_used": 2,
+          "ep1_success": false,
+          "ep2_success": false,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/debugbench/logic_error/debugbench_004_reverse_bits__reflexion__baseline__h0__20260308_040731.json"
+        },
+        {
+          "task_id": "debugbench_012_corporate_flight_bookings",
+          "success": false,
+          "total_tokens": 53226,
+          "total_turns": 18,
+          "episodes_used": 2,
+          "ep1_success": false,
+          "ep2_success": false,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/debugbench/reference_error/debugbench_012_corporate_flight_bookings__reflexion__baseline__h0__20260308_040751.json"
+        },
+        {
+          "task_id": "debugbench_017_find_mode_in_binary_search_tree",
+          "success": false,
+          "total_tokens": 51499,
+          "total_turns": 20,
+          "episodes_used": 2,
+          "ep1_success": false,
+          "ep2_success": false,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/debugbench/syntax_error/debugbench_017_find_mode_in_binary_search_tree__reflexion__baseline__h0__20260308_040813.json"
+        },
+        {
+          "task_id": "debugbench_018_valid_arrangement_of_pairs",
+          "success": false,
+          "total_tokens": 51565,
+          "total_turns": 20,
+          "episodes_used": 2,
+          "ep1_success": false,
+          "ep2_success": false,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/debugbench/syntax_error/debugbench_018_valid_arrangement_of_pairs__reflexion__baseline__h0__20260308_040831.json"
+        },
+        {
+          "task_id": "debugbench_031_next_greater_element_i",
+          "success": true,
+          "total_tokens": 5634,
+          "total_turns": 4,
+          "episodes_used": 1,
+          "ep1_success": true,
+          "ep2_success": null,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/debugbench/reference_error/debugbench_031_next_greater_element_i__reflexion__baseline__h0__20260308_040848.json"
+        },
+        {
+          "task_id": "debugbench_037_minimum_bit_flips_to_convert_number",
+          "success": false,
+          "total_tokens": 53713,
+          "total_turns": 21,
+          "episodes_used": 2,
+          "ep1_success": false,
+          "ep2_success": false,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/debugbench/syntax_error/debugbench_037_minimum_bit_flips_to_convert_number__reflexion__baseline__h0__20260308_040850.json"
+        },
+        {
+          "task_id": "debugbench_039_grid_game",
+          "success": false,
+          "total_tokens": 50144,
+          "total_turns": 22,
+          "episodes_used": 2,
+          "ep1_success": false,
+          "ep2_success": false,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/debugbench/syntax_error/debugbench_039_grid_game__reflexion__baseline__h0__20260308_040919.json"
+        },
+        {
+          "task_id": "mini_nightmare_patcher",
+          "success": false,
+          "total_tokens": 53978,
+          "total_turns": 15,
+          "episodes_used": 2,
+          "ep1_success": false,
+          "ep2_success": false,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/mini_nightmare/mini_nightmare_patcher__reflexion__baseline__h0__20260308_040946.json"
+        },
+        {
+          "task_id": "mini_nightmare_purr",
+          "success": false,
+          "total_tokens": 51741,
+          "total_turns": 18,
+          "episodes_used": 2,
+          "ep1_success": false,
+          "ep2_success": false,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/mini_nightmare/mini_nightmare_purr__reflexion__baseline__h0__20260308_041013.json"
+        },
+        {
+          "task_id": "mini_nightmare_scientific_calculator",
+          "success": false,
+          "total_tokens": 50424,
+          "total_turns": 17,
+          "episodes_used": 2,
+          "ep1_success": false,
+          "ep2_success": false,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/mini_nightmare/mini_nightmare_scientific_calculator__reflexion__baseline__h0__20260308_041035.json"
+        },
+        {
+          "task_id": "mini_nightmare_tomorrow_date",
+          "success": false,
+          "total_tokens": 51024,
+          "total_turns": 20,
+          "episodes_used": 2,
+          "ep1_success": false,
+          "ep2_success": false,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/mini_nightmare/mini_nightmare_tomorrow_date__reflexion__baseline__h0__20260308_041058.json"
+        },
+        {
+          "task_id": "quixbugs_find_first_in_sorted",
+          "success": true,
+          "total_tokens": 10928,
+          "total_turns": 8,
+          "episodes_used": 1,
+          "ep1_success": true,
+          "ep2_success": null,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/quixbugs/quixbugs_find_first_in_sorted__reflexion__baseline__h0__20260308_041118.json"
+        },
+        {
+          "task_id": "quixbugs_find_in_sorted",
+          "success": true,
+          "total_tokens": 28119,
+          "total_turns": 8,
+          "episodes_used": 1,
+          "ep1_success": true,
+          "ep2_success": null,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/quixbugs/quixbugs_find_in_sorted__reflexion__baseline__h0__20260308_041152.json"
+        },
+        {
+          "task_id": "quixbugs_is_valid_parenthesization",
+          "success": true,
+          "total_tokens": 7548,
+          "total_turns": 5,
+          "episodes_used": 1,
+          "ep1_success": true,
+          "ep2_success": null,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/quixbugs/quixbugs_is_valid_parenthesization__reflexion__baseline__h0__20260308_041204.json"
+        },
+        {
+          "task_id": "quixbugs_knapsack",
+          "success": false,
+          "total_tokens": 57214,
+          "total_turns": 13,
+          "episodes_used": 2,
+          "ep1_success": false,
+          "ep2_success": false,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/quixbugs/quixbugs_knapsack__reflexion__baseline__h0__20260308_041207.json"
+        },
+        {
+          "task_id": "quixbugs_mergesort",
+          "success": true,
+          "total_tokens": 9829,
+          "total_turns": 4,
+          "episodes_used": 1,
+          "ep1_success": true,
+          "ep2_success": null,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/quixbugs/quixbugs_mergesort__reflexion__baseline__h0__20260308_041244.json"
+        },
+        {
+          "task_id": "quixbugs_next_palindrome",
+          "success": false,
+          "total_tokens": 50780,
+          "total_turns": 17,
+          "episodes_used": 2,
+          "ep1_success": false,
+          "ep2_success": false,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/quixbugs/quixbugs_next_palindrome__reflexion__baseline__h0__20260308_041249.json"
+        },
+        {
+          "task_id": "quixbugs_quicksort",
+          "success": true,
+          "total_tokens": 17394,
+          "total_turns": 8,
+          "episodes_used": 1,
+          "ep1_success": true,
+          "ep2_success": null,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/quixbugs/quixbugs_quicksort__reflexion__baseline__h0__20260308_041308.json"
+        },
+        {
+          "task_id": "quixbugs_to_base",
+          "success": true,
+          "total_tokens": 19269,
+          "total_turns": 8,
+          "episodes_used": 1,
+          "ep1_success": true,
+          "ep2_success": null,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/quixbugs/quixbugs_to_base__reflexion__baseline__h0__20260308_041314.json"
+        },
+        {
+          "task_id": "quixbugs_wrap",
+          "success": true,
+          "total_tokens": 12770,
+          "total_turns": 6,
+          "episodes_used": 1,
+          "ep1_success": true,
+          "ep2_success": null,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/quixbugs/quixbugs_wrap__reflexion__baseline__h0__20260308_041319.json"
+        }
+      ]
+    },
+    "reflexion_ep1_only": {
+      "condition": "reflexion_ep1_only",
+      "description": "Stop after Episode 1 while keeping the reflexion prompt unchanged.",
+      "n_tasks": 20,
+      "pass": 7,
+      "fail": 13,
+      "pass_pct": 35.0,
+      "avg_tokens": 37813.2,
+      "wall_time_sec": 388.8,
+      "runs": [
+        {
+          "task_id": "debugbench_004_reverse_bits",
+          "success": false,
+          "total_tokens": 53829,
+          "total_turns": 12,
+          "episodes_used": 1,
+          "ep1_success": false,
+          "ep2_success": null,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/debugbench/logic_error/debugbench_004_reverse_bits__reflexion__ep1_only__h0__20260308_041322.json"
+        },
+        {
+          "task_id": "debugbench_012_corporate_flight_bookings",
+          "success": true,
+          "total_tokens": 23003,
+          "total_turns": 10,
+          "episodes_used": 1,
+          "ep1_success": true,
+          "ep2_success": null,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/debugbench/reference_error/debugbench_012_corporate_flight_bookings__reflexion__ep1_only__h0__20260308_041336.json"
+        },
+        {
+          "task_id": "debugbench_017_find_mode_in_binary_search_tree",
+          "success": false,
+          "total_tokens": 51579,
+          "total_turns": 18,
+          "episodes_used": 1,
+          "ep1_success": false,
+          "ep2_success": null,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/debugbench/syntax_error/debugbench_017_find_mode_in_binary_search_tree__reflexion__ep1_only__h0__20260308_041344.json"
+        },
+        {
+          "task_id": "debugbench_018_valid_arrangement_of_pairs",
+          "success": false,
+          "total_tokens": 52791,
+          "total_turns": 20,
+          "episodes_used": 1,
+          "ep1_success": false,
+          "ep2_success": null,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/debugbench/syntax_error/debugbench_018_valid_arrangement_of_pairs__reflexion__ep1_only__h0__20260308_041358.json"
+        },
+        {
+          "task_id": "debugbench_031_next_greater_element_i",
+          "success": true,
+          "total_tokens": 5663,
+          "total_turns": 4,
+          "episodes_used": 1,
+          "ep1_success": true,
+          "ep2_success": null,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/debugbench/reference_error/debugbench_031_next_greater_element_i__reflexion__ep1_only__h0__20260308_041408.json"
+        },
+        {
+          "task_id": "debugbench_037_minimum_bit_flips_to_convert_number",
+          "success": false,
+          "total_tokens": 50429,
+          "total_turns": 19,
+          "episodes_used": 1,
+          "ep1_success": false,
+          "ep2_success": null,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/debugbench/syntax_error/debugbench_037_minimum_bit_flips_to_convert_number__reflexion__ep1_only__h0__20260308_041411.json"
+        },
+        {
+          "task_id": "debugbench_039_grid_game",
+          "success": false,
+          "total_tokens": 51367,
+          "total_turns": 19,
+          "episodes_used": 1,
+          "ep1_success": false,
+          "ep2_success": null,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/debugbench/syntax_error/debugbench_039_grid_game__reflexion__ep1_only__h0__20260308_041434.json"
+        },
+        {
+          "task_id": "mini_nightmare_patcher",
+          "success": false,
+          "total_tokens": 51326,
+          "total_turns": 14,
+          "episodes_used": 1,
+          "ep1_success": false,
+          "ep2_success": null,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/mini_nightmare/mini_nightmare_patcher__reflexion__ep1_only__h0__20260308_041456.json"
+        },
+        {
+          "task_id": "mini_nightmare_purr",
+          "success": false,
+          "total_tokens": 52296,
+          "total_turns": 17,
+          "episodes_used": 1,
+          "ep1_success": false,
+          "ep2_success": null,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/mini_nightmare/mini_nightmare_purr__reflexion__ep1_only__h0__20260308_041510.json"
+        },
+        {
+          "task_id": "mini_nightmare_scientific_calculator",
+          "success": false,
+          "total_tokens": 16189,
+          "total_turns": 10,
+          "episodes_used": 1,
+          "ep1_success": false,
+          "ep2_success": null,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/mini_nightmare/mini_nightmare_scientific_calculator__reflexion__ep1_only__h0__20260308_041525.json"
+        },
+        {
+          "task_id": "mini_nightmare_tomorrow_date",
+          "success": false,
+          "total_tokens": 54267,
+          "total_turns": 13,
+          "episodes_used": 1,
+          "ep1_success": false,
+          "ep2_success": null,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/mini_nightmare/mini_nightmare_tomorrow_date__reflexion__ep1_only__h0__20260308_041539.json"
+        },
+        {
+          "task_id": "quixbugs_find_first_in_sorted",
+          "success": true,
+          "total_tokens": 43527,
+          "total_turns": 17,
+          "episodes_used": 1,
+          "ep1_success": true,
+          "ep2_success": null,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/quixbugs/quixbugs_find_first_in_sorted__reflexion__ep1_only__h0__20260308_041551.json"
+        },
+        {
+          "task_id": "quixbugs_find_in_sorted",
+          "success": false,
+          "total_tokens": 53882,
+          "total_turns": 15,
+          "episodes_used": 1,
+          "ep1_success": false,
+          "ep2_success": null,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/quixbugs/quixbugs_find_in_sorted__reflexion__ep1_only__h0__20260308_041731.json"
+        },
+        {
+          "task_id": "quixbugs_is_valid_parenthesization",
+          "success": true,
+          "total_tokens": 9224,
+          "total_turns": 6,
+          "episodes_used": 1,
+          "ep1_success": true,
+          "ep2_success": null,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/quixbugs/quixbugs_is_valid_parenthesization__reflexion__ep1_only__h0__20260308_041754.json"
+        },
+        {
+          "task_id": "quixbugs_knapsack",
+          "success": false,
+          "total_tokens": 52177,
+          "total_turns": 14,
+          "episodes_used": 1,
+          "ep1_success": false,
+          "ep2_success": null,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/quixbugs/quixbugs_knapsack__reflexion__ep1_only__h0__20260308_041758.json"
+        },
+        {
+          "task_id": "quixbugs_mergesort",
+          "success": false,
+          "total_tokens": 50933,
+          "total_turns": 11,
+          "episodes_used": 1,
+          "ep1_success": false,
+          "ep2_success": null,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/quixbugs/quixbugs_mergesort__reflexion__ep1_only__h0__20260308_041910.json"
+        },
+        {
+          "task_id": "quixbugs_next_palindrome",
+          "success": true,
+          "total_tokens": 7555,
+          "total_turns": 5,
+          "episodes_used": 1,
+          "ep1_success": true,
+          "ep2_success": null,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/quixbugs/quixbugs_next_palindrome__reflexion__ep1_only__h0__20260308_041924.json"
+        },
+        {
+          "task_id": "quixbugs_quicksort",
+          "success": false,
+          "total_tokens": 52163,
+          "total_turns": 16,
+          "episodes_used": 1,
+          "ep1_success": false,
+          "ep2_success": null,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/quixbugs/quixbugs_quicksort__reflexion__ep1_only__h0__20260308_041928.json"
+        },
+        {
+          "task_id": "quixbugs_to_base",
+          "success": true,
+          "total_tokens": 11223,
+          "total_turns": 6,
+          "episodes_used": 1,
+          "ep1_success": true,
+          "ep2_success": null,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/quixbugs/quixbugs_to_base__reflexion__ep1_only__h0__20260308_041945.json"
+        },
+        {
+          "task_id": "quixbugs_wrap",
+          "success": true,
+          "total_tokens": 12842,
+          "total_turns": 6,
+          "episodes_used": 1,
+          "ep1_success": true,
+          "ep2_success": null,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/quixbugs/quixbugs_wrap__reflexion__ep1_only__h0__20260308_041948.json"
+        }
+      ]
+    },
+    "restart_without_reflection": {
+      "condition": "restart_without_reflection",
+      "description": "Run Ep2 after a clean restart, but inject no reflection text.",
+      "n_tasks": 20,
+      "pass": 5,
+      "fail": 15,
+      "pass_pct": 25.0,
+      "avg_tokens": 46283.6,
+      "wall_time_sec": 320.0,
+      "runs": [
+        {
+          "task_id": "debugbench_004_reverse_bits",
+          "success": false,
+          "total_tokens": 54971,
+          "total_turns": 17,
+          "episodes_used": 2,
+          "ep1_success": false,
+          "ep2_success": false,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/debugbench/logic_error/debugbench_004_reverse_bits__reflexion__restart_without_reflection__h0__20260308_041951.json"
+        },
+        {
+          "task_id": "debugbench_012_corporate_flight_bookings",
+          "success": true,
+          "total_tokens": 54304,
+          "total_turns": 16,
+          "episodes_used": 1,
+          "ep1_success": true,
+          "ep2_success": null,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/debugbench/reference_error/debugbench_012_corporate_flight_bookings__reflexion__restart_without_reflection__h0__20260308_042003.json"
+        },
+        {
+          "task_id": "debugbench_017_find_mode_in_binary_search_tree",
+          "success": false,
+          "total_tokens": 52365,
+          "total_turns": 19,
+          "episodes_used": 2,
+          "ep1_success": false,
+          "ep2_success": false,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/debugbench/syntax_error/debugbench_017_find_mode_in_binary_search_tree__reflexion__restart_without_reflection__h0__20260308_042017.json"
+        },
+        {
+          "task_id": "debugbench_018_valid_arrangement_of_pairs",
+          "success": false,
+          "total_tokens": 53080,
+          "total_turns": 19,
+          "episodes_used": 2,
+          "ep1_success": false,
+          "ep2_success": false,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/debugbench/syntax_error/debugbench_018_valid_arrangement_of_pairs__reflexion__restart_without_reflection__h0__20260308_042036.json"
+        },
+        {
+          "task_id": "debugbench_031_next_greater_element_i",
+          "success": false,
+          "total_tokens": 52462,
+          "total_turns": 17,
+          "episodes_used": 2,
+          "ep1_success": false,
+          "ep2_success": false,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/debugbench/reference_error/debugbench_031_next_greater_element_i__reflexion__restart_without_reflection__h0__20260308_042048.json"
+        },
+        {
+          "task_id": "debugbench_037_minimum_bit_flips_to_convert_number",
+          "success": false,
+          "total_tokens": 54916,
+          "total_turns": 21,
+          "episodes_used": 2,
+          "ep1_success": false,
+          "ep2_success": false,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/debugbench/syntax_error/debugbench_037_minimum_bit_flips_to_convert_number__reflexion__restart_without_reflection__h0__20260308_042059.json"
+        },
+        {
+          "task_id": "debugbench_039_grid_game",
+          "success": false,
+          "total_tokens": 54566,
+          "total_turns": 20,
+          "episodes_used": 2,
+          "ep1_success": false,
+          "ep2_success": false,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/debugbench/syntax_error/debugbench_039_grid_game__reflexion__restart_without_reflection__h0__20260308_042123.json"
+        },
+        {
+          "task_id": "mini_nightmare_patcher",
+          "success": false,
+          "total_tokens": 56004,
+          "total_turns": 15,
+          "episodes_used": 2,
+          "ep1_success": false,
+          "ep2_success": false,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/mini_nightmare/mini_nightmare_patcher__reflexion__restart_without_reflection__h0__20260308_042147.json"
+        },
+        {
+          "task_id": "mini_nightmare_purr",
+          "success": false,
+          "total_tokens": 51235,
+          "total_turns": 18,
+          "episodes_used": 2,
+          "ep1_success": false,
+          "ep2_success": false,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/mini_nightmare/mini_nightmare_purr__reflexion__restart_without_reflection__h0__20260308_042203.json"
+        },
+        {
+          "task_id": "mini_nightmare_scientific_calculator",
+          "success": false,
+          "total_tokens": 51080,
+          "total_turns": 23,
+          "episodes_used": 2,
+          "ep1_success": false,
+          "ep2_success": false,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/mini_nightmare/mini_nightmare_scientific_calculator__reflexion__restart_without_reflection__h0__20260308_042218.json"
+        },
+        {
+          "task_id": "mini_nightmare_tomorrow_date",
+          "success": false,
+          "total_tokens": 52835,
+          "total_turns": 15,
+          "episodes_used": 2,
+          "ep1_success": false,
+          "ep2_success": false,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/mini_nightmare/mini_nightmare_tomorrow_date__reflexion__restart_without_reflection__h0__20260308_042243.json"
+        },
+        {
+          "task_id": "quixbugs_find_first_in_sorted",
+          "success": false,
+          "total_tokens": 55136,
+          "total_turns": 21,
+          "episodes_used": 2,
+          "ep1_success": false,
+          "ep2_success": false,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/quixbugs/quixbugs_find_first_in_sorted__reflexion__restart_without_reflection__h0__20260308_042251.json"
+        },
+        {
+          "task_id": "quixbugs_find_in_sorted",
+          "success": false,
+          "total_tokens": 54689,
+          "total_turns": 14,
+          "episodes_used": 2,
+          "ep1_success": false,
+          "ep2_success": false,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/quixbugs/quixbugs_find_in_sorted__reflexion__restart_without_reflection__h0__20260308_042405.json"
+        },
+        {
+          "task_id": "quixbugs_is_valid_parenthesization",
+          "success": true,
+          "total_tokens": 9186,
+          "total_turns": 6,
+          "episodes_used": 1,
+          "ep1_success": true,
+          "ep2_success": null,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/quixbugs/quixbugs_is_valid_parenthesization__reflexion__restart_without_reflection__h0__20260308_042418.json"
+        },
+        {
+          "task_id": "quixbugs_knapsack",
+          "success": false,
+          "total_tokens": 57971,
+          "total_turns": 13,
+          "episodes_used": 2,
+          "ep1_success": false,
+          "ep2_success": false,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/quixbugs/quixbugs_knapsack__reflexion__restart_without_reflection__h0__20260308_042422.json"
+        },
+        {
+          "task_id": "quixbugs_mergesort",
+          "success": false,
+          "total_tokens": 56776,
+          "total_turns": 14,
+          "episodes_used": 2,
+          "ep1_success": false,
+          "ep2_success": false,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/quixbugs/quixbugs_mergesort__reflexion__restart_without_reflection__h0__20260308_042432.json"
+        },
+        {
+          "task_id": "quixbugs_next_palindrome",
+          "success": true,
+          "total_tokens": 17786,
+          "total_turns": 9,
+          "episodes_used": 1,
+          "ep1_success": true,
+          "ep2_success": null,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/quixbugs/quixbugs_next_palindrome__reflexion__restart_without_reflection__h0__20260308_042447.json"
+        },
+        {
+          "task_id": "quixbugs_quicksort",
+          "success": true,
+          "total_tokens": 9331,
+          "total_turns": 5,
+          "episodes_used": 1,
+          "ep1_success": true,
+          "ep2_success": null,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/quixbugs/quixbugs_quicksort__reflexion__restart_without_reflection__h0__20260308_042453.json"
+        },
+        {
+          "task_id": "quixbugs_to_base",
+          "success": false,
+          "total_tokens": 55233,
+          "total_turns": 18,
+          "episodes_used": 2,
+          "ep1_success": false,
+          "ep2_success": false,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/quixbugs/quixbugs_to_base__reflexion__restart_without_reflection__h0__20260308_042457.json"
+        },
+        {
+          "task_id": "quixbugs_wrap",
+          "success": true,
+          "total_tokens": 21745,
+          "total_turns": 8,
+          "episodes_used": 1,
+          "ep1_success": true,
+          "ep2_success": null,
+          "result_path": "/Users/yvette/Desktop/UCSD/291a/final_project/results/ablation_reflexion_mechanism/quixbugs/quixbugs_wrap__reflexion__restart_without_reflection__h0__20260308_042506.json"
+        }
+      ]
+    }
+  },
+  "comparisons": {
+    "ep1_only_minus_react_pass_pct": -5.0,
+    "baseline_minus_react_pass_pct": 0.0,
+    "baseline_minus_ep1_only_pass_pct": 5.0,
+    "baseline_minus_restart_without_reflection_pass_pct": 15.0,
+    "ep2_rescues_baseline": [],
+    "ep2_rescues_restart_without_reflection": [],
+    "baseline_success_but_restart_without_reflection_fail": [
+      "debugbench_031_next_greater_element_i",
+      "quixbugs_find_first_in_sorted",
+      "quixbugs_find_in_sorted",
+      "quixbugs_mergesort",
+      "quixbugs_to_base"
+    ],
+    "restart_without_reflection_success_but_ep1_only_fail": [
+      "quixbugs_quicksort"
+    ],
+    "ep1_only_success_but_react_fail": [
+      "debugbench_012_corporate_flight_bookings"
+    ],
+    "react_success_but_ep1_only_fail": [
+      "quixbugs_mergesort",
+      "quixbugs_quicksort"
+    ],
+    "baseline_success_but_react_fail": [
+      "quixbugs_find_in_sorted"
+    ],
+    "react_success_but_baseline_fail": [
+      "quixbugs_next_palindrome"
+    ]
+  }
+}

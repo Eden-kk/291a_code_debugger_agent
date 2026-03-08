@@ -1,0 +1,35 @@
+--- a/src/patcher.py
++++ b/src/patcher.py
+@@ -18,16 +18,22 @@
+         line_numbers = line_number_string.split(":")
+         line_numbers = [item.strip() for item in line_numbers]
+         if len(line_numbers) not in [1, 2]:
+-            return "Invalid line number format.", None, None
+-        if len(line_numbers) == 1:
+-            # only head is provided (rewrite that line)
+-            head = int(line_numbers[0]) - 1  # 1-based to 0-based
+-            tail = head
+-        else:
+-            # len(line_numbers) == 2:
+-            # both head and tail are provided
+-            head = int(line_numbers[0]) - 1  # 1-based to 0-based
+-            tail = int(line_numbers[1]) - 1  # 1-based to 0-based
++            return "SyntaxError: invalid syntax.", None, None
++        try:
++            if len(line_numbers) == 1:
++                # only head is provided (rewrite that line)
++                head = int(line_numbers[0]) - 1  # 1-based to 0-based
++                tail = head
++            else:
++                # len(line_numbers) == 2:
++                # both head and tail are provided
++                head = int(line_numbers[0]) - 1  # 1-based to 0-based
++                tail = int(line_numbers[1]) - 1  # 1-based to 0-based
++        except ValueError:
++            return "SyntaxError: invalid syntax.", None, None
++        # Validate line numbers: must be >= 0 and head <= tail
++        if head < 0 or tail < 0 or head > tail:
++            return "SyntaxError: invalid syntax.", None, None
+         return "", head, tail
+     
+     def _rewrite_file(self, code, head, tail, new_code):

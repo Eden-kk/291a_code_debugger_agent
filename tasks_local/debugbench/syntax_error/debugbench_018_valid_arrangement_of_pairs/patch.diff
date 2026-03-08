@@ -1,0 +1,11 @@
+--- a/src/solution.py
++++ b/src/solution.py
+@@ -26,6 +26,6 @@
+             while graph[x]: fn(graph[x].pop()) 
+             ans.append(x)
+         
+-        fn(x
++        fn(x)
+         ans.reverse()
+-        return [[ans[i], ans[i+1]] for i in range(len(ans)-1)]
++        return [[ans[i], ans[i+1]] for i in range(len(ans)-1)]

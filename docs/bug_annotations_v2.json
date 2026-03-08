@@ -1,0 +1,642 @@
+{
+  "_meta": {
+    "version": "2.0",
+    "date": "2026-03-07",
+    "rubric": {
+      "human-easy": "A competent programmer can find and fix the bug by recognizing a common error pattern from the code + test output, WITHOUT needing to deeply understand the surrounding algorithm or trace complex logic. Includes: syntax errors, typos, wrong attribute/variable names causing crashes, wrong operators obvious from context, simple off-by-ones where test output reveals the issue, missing returns/conditions obvious from function signature.",
+      "human-difficult": "Requires understanding the algorithm, tracing complex logic, domain knowledge, reasoning about concurrency/state, or dealing with multiple interacting errors."
+    }
+  },
+  "annotations": {
+    "quixbugs_bitcount": {
+      "human_difficulty": "human-difficult",
+      "reasoning": "Need to understand bitwise trick (n &= n-1 clears lowest set bit) to see XOR is wrong",
+      "source": "QuixBugs",
+      "bug_pattern": "wrong-operator",
+      "fix_lines": 1
+    },
+    "quixbugs_breadth_first_search": {
+      "human_difficulty": "human-difficult",
+      "reasoning": "Need to understand BFS queue-based traversal to see the loop condition and return logic",
+      "source": "QuixBugs",
+      "bug_pattern": "missing-condition",
+      "fix_lines": 1
+    },
+    "quixbugs_bucketsort": {
+      "human_difficulty": "human-difficult",
+      "reasoning": "Need to understand bucket sort mechanics to see iteration should be over counts not arr",
+      "source": "QuixBugs",
+      "bug_pattern": "wrong-variable",
+      "fix_lines": 1
+    },
+    "quixbugs_depth_first_search": {
+      "human_difficulty": "human-difficult",
+      "reasoning": "Need to understand DFS cycle avoidance to see visited set must be updated before recursion",
+      "source": "QuixBugs",
+      "bug_pattern": "missing-condition",
+      "fix_lines": 1
+    },
+    "quixbugs_detect_cycle": {
+      "human_difficulty": "human-difficult",
+      "reasoning": "Need to understand Floyd's tortoise-and-hare algorithm to see the missing null check",
+      "source": "QuixBugs",
+      "bug_pattern": "missing-condition",
+      "fix_lines": 1
+    },
+    "quixbugs_find_first_in_sorted": {
+      "human_difficulty": "human-easy",
+      "reasoning": "Standard binary search off-by-one (lo <= hi vs lo < hi), recognizable pattern",
+      "source": "QuixBugs",
+      "bug_pattern": "off-by-one",
+      "fix_lines": 1
+    },
+    "quixbugs_find_in_sorted": {
+      "human_difficulty": "human-easy",
+      "reasoning": "Standard binary search off-by-one (mid vs mid+1), recognizable pattern",
+      "source": "QuixBugs",
+      "bug_pattern": "off-by-one",
+      "fix_lines": 1
+    },
+    "quixbugs_flatten": {
+      "human_difficulty": "human-easy",
+      "reasoning": "yield flatten(x) vs yield x — obvious from output (generators instead of values)",
+      "source": "QuixBugs",
+      "bug_pattern": "wrong-variable",
+      "fix_lines": 1
+    },
+    "quixbugs_gcd": {
+      "human_difficulty": "human-easy",
+      "reasoning": "Argument order swap in gcd(a%b, b) vs gcd(b, a%b), recognizable from Euclidean algorithm",
+      "source": "QuixBugs",
+      "bug_pattern": "wrong-variable",
+      "fix_lines": 1
+    },
+    "quixbugs_get_factors": {
+      "human_difficulty": "human-difficult",
+      "reasoning": "Need to understand trial division to see base case should return [n] not []",
+      "source": "QuixBugs",
+      "bug_pattern": "missing-condition",
+      "fix_lines": 1
+    },
+    "quixbugs_hanoi": {
+      "human_difficulty": "human-difficult",
+      "reasoning": "Need to understand Tower of Hanoi recursion to see start→helper should be start→end",
+      "source": "QuixBugs",
+      "bug_pattern": "wrong-variable",
+      "fix_lines": 1
+    },
+    "quixbugs_is_valid_parenthesization": {
+      "human_difficulty": "human-easy",
+      "reasoning": "Return True should be return depth==0, obvious from function contract",
+      "source": "QuixBugs",
+      "bug_pattern": "missing-condition",
+      "fix_lines": 1
+    },
+    "quixbugs_kheapsort": {
+      "human_difficulty": "human-difficult",
+      "reasoning": "Need to understand k-heap sort mechanics to see arr[k:] vs arr iteration issue",
+      "source": "QuixBugs",
+      "bug_pattern": "off-by-one",
+      "fix_lines": 1
+    },
+    "quixbugs_knapsack": {
+      "human_difficulty": "human-easy",
+      "reasoning": "weight < j should be weight <= j, standard boundary condition, obvious from test",
+      "source": "QuixBugs",
+      "bug_pattern": "wrong-operator",
+      "fix_lines": 1
+    },
+    "quixbugs_kth": {
+      "human_difficulty": "human-difficult",
+      "reasoning": "Need to understand quickselect partitioning to see k adjustment in recursive call",
+      "source": "QuixBugs",
+      "bug_pattern": "wrong-variable",
+      "fix_lines": 1
+    },
+    "quixbugs_lcs_length": {
+      "human_difficulty": "human-difficult",
+      "reasoning": "Need to understand LCS DP recurrence to see dp[i-1,j-1] vs dp[i-1,j]",
+      "source": "QuixBugs",
+      "bug_pattern": "wrong-variable",
+      "fix_lines": 1
+    },
+    "quixbugs_levenshtein": {
+      "human_difficulty": "human-difficult",
+      "reasoning": "Need to understand edit distance recurrence to see match should cost 0, not 1",
+      "source": "QuixBugs",
+      "bug_pattern": "wrong-operator",
+      "fix_lines": 1
+    },
+    "quixbugs_lis": {
+      "human_difficulty": "human-difficult",
+      "reasoning": "Need to understand LIS DP to see max() is needed to keep longest seen so far",
+      "source": "QuixBugs",
+      "bug_pattern": "logic-error",
+      "fix_lines": 1
+    },
+    "quixbugs_longest_common_subsequence": {
+      "human_difficulty": "human-difficult",
+      "reasoning": "Need to understand LCS recursion to see both strings must advance on match",
+      "source": "QuixBugs",
+      "bug_pattern": "wrong-variable",
+      "fix_lines": 1
+    },
+    "quixbugs_max_sublist_sum": {
+      "human_difficulty": "human-difficult",
+      "reasoning": "Need to understand Kadane's algorithm to see negative prefix reset is needed",
+      "source": "QuixBugs",
+      "bug_pattern": "missing-condition",
+      "fix_lines": 1
+    },
+    "quixbugs_mergesort": {
+      "human_difficulty": "human-easy",
+      "reasoning": "Base case len(arr)==0 should be len(arr)<=1, standard pattern",
+      "source": "QuixBugs",
+      "bug_pattern": "off-by-one",
+      "fix_lines": 1
+    },
+    "quixbugs_minimum_spanning_tree": {
+      "human_difficulty": "human-difficult",
+      "reasoning": "Need to understand union-find/Kruskal's to see set update vs assignment difference",
+      "source": "QuixBugs",
+      "bug_pattern": "wrong-variable",
+      "fix_lines": 1
+    },
+    "quixbugs_next_palindrome": {
+      "human_difficulty": "human-easy",
+      "reasoning": "Off-by-one in array length (len vs len-1), recognizable from test output",
+      "source": "QuixBugs",
+      "bug_pattern": "off-by-one",
+      "fix_lines": 1
+    },
+    "quixbugs_next_permutation": {
+      "human_difficulty": "human-difficult",
+      "reasoning": "Need to understand next permutation algorithm to see comparison direction swap",
+      "source": "QuixBugs",
+      "bug_pattern": "wrong-operator",
+      "fix_lines": 1
+    },
+    "quixbugs_pascal": {
+      "human_difficulty": "human-easy",
+      "reasoning": "range(0, r) should be range(0, r+1), standard off-by-one in loop bound",
+      "source": "QuixBugs",
+      "bug_pattern": "off-by-one",
+      "fix_lines": 1
+    },
+    "quixbugs_possible_change": {
+      "human_difficulty": "human-difficult",
+      "reasoning": "Need to understand coin change recursion to see base case for empty coins",
+      "source": "QuixBugs",
+      "bug_pattern": "missing-condition",
+      "fix_lines": 1
+    },
+    "quixbugs_powerset": {
+      "human_difficulty": "human-difficult",
+      "reasoning": "Need to understand powerset recursion to see subsets without first element are missing",
+      "source": "QuixBugs",
+      "bug_pattern": "logic-error",
+      "fix_lines": 1
+    },
+    "quixbugs_quicksort": {
+      "human_difficulty": "human-easy",
+      "reasoning": "x > pivot should be x >= pivot, standard boundary condition",
+      "source": "QuixBugs",
+      "bug_pattern": "wrong-operator",
+      "fix_lines": 1
+    },
+    "quixbugs_reverse_linked_list": {
+      "human_difficulty": "human-difficult",
+      "reasoning": "Need to understand linked list pointer manipulation to see prevnode update is missing",
+      "source": "QuixBugs",
+      "bug_pattern": "wrong-variable",
+      "fix_lines": 1
+    },
+    "quixbugs_rpn_eval": {
+      "human_difficulty": "human-difficult",
+      "reasoning": "Need to understand RPN stack semantics to see operand order matters for non-commutative ops",
+      "source": "QuixBugs",
+      "bug_pattern": "wrong-variable",
+      "fix_lines": 1
+    },
+    "quixbugs_shortest_path_length": {
+      "human_difficulty": "human-difficult",
+      "reasoning": "Need to understand Dijkstra's algorithm to see wrong distance source in relaxation",
+      "source": "QuixBugs",
+      "bug_pattern": "wrong-variable",
+      "fix_lines": 1
+    },
+    "quixbugs_shortest_path_lengths": {
+      "human_difficulty": "human-difficult",
+      "reasoning": "Need to understand Floyd-Warshall to see transposed index in path matrix",
+      "source": "QuixBugs",
+      "bug_pattern": "wrong-variable",
+      "fix_lines": 1
+    },
+    "quixbugs_shortest_paths": {
+      "human_difficulty": "human-difficult",
+      "reasoning": "Need to understand Bellman-Ford to see weight_by_edge vs weight_by_node confusion",
+      "source": "QuixBugs",
+      "bug_pattern": "wrong-variable",
+      "fix_lines": 1
+    },
+    "quixbugs_shunting_yard": {
+      "human_difficulty": "human-difficult",
+      "reasoning": "Need to understand shunting-yard algorithm to see operator stack push is missing",
+      "source": "QuixBugs",
+      "bug_pattern": "missing-condition",
+      "fix_lines": 1
+    },
+    "quixbugs_sieve": {
+      "human_difficulty": "human-easy",
+      "reasoning": "any(n%p > 0) should be all(n%p > 0), obvious logic error (any prime vs all primes)",
+      "source": "QuixBugs",
+      "bug_pattern": "wrong-operator",
+      "fix_lines": 1
+    },
+    "quixbugs_sqrt": {
+      "human_difficulty": "human-difficult",
+      "reasoning": "Need to understand Newton-Raphson to see convergence check uses wrong expression",
+      "source": "QuixBugs",
+      "bug_pattern": "wrong-variable",
+      "fix_lines": 1
+    },
+    "quixbugs_subsequences": {
+      "human_difficulty": "human-difficult",
+      "reasoning": "Need to understand combinatorial recursion to see base case [] vs [[]] difference",
+      "source": "QuixBugs",
+      "bug_pattern": "wrong-variable",
+      "fix_lines": 1
+    },
+    "quixbugs_to_base": {
+      "human_difficulty": "human-easy",
+      "reasoning": "String concatenation order (result + char vs char + result), obvious from output",
+      "source": "QuixBugs",
+      "bug_pattern": "wrong-variable",
+      "fix_lines": 1
+    },
+    "quixbugs_topological_ordering": {
+      "human_difficulty": "human-difficult",
+      "reasoning": "Need to understand topological sort to see outgoing_nodes vs incoming_nodes confusion",
+      "source": "QuixBugs",
+      "bug_pattern": "wrong-variable",
+      "fix_lines": 1
+    },
+    "quixbugs_wrap": {
+      "human_difficulty": "human-easy",
+      "reasoning": "Missing append of remaining text, obvious from test output (last segment dropped)",
+      "source": "QuixBugs",
+      "bug_pattern": "missing-condition",
+      "fix_lines": 1
+    },
+    "debugbench_001_course_schedule": {
+      "human_difficulty": "human-difficult",
+      "reasoning": "DFS cycle detection logic, need to understand visited vs in-stack marking",
+      "source": "DebugBench",
+      "bug_pattern": "logic-error",
+      "fix_lines": 5
+    },
+    "debugbench_002_minimum_speed_to_arrive_on_time": {
+      "human_difficulty": "human-easy",
+      "reasoning": "hour-1 vs hour+1, simple wrong operator obvious from context",
+      "source": "DebugBench",
+      "bug_pattern": "wrong-operator",
+      "fix_lines": 3
+    },
+    "debugbench_003_binary_tree_inorder_traversal": {
+      "human_difficulty": "human-easy",
+      "reasoning": "Append before visiting left subtree, obvious wrong order in inorder traversal",
+      "source": "DebugBench",
+      "bug_pattern": "logic-error",
+      "fix_lines": 4
+    },
+    "debugbench_004_reverse_bits": {
+      "human_difficulty": "human-easy",
+      "reasoning": "n<<1 vs n>>1, simple wrong shift direction, obvious from 'reverse bits' context",
+      "source": "DebugBench",
+      "bug_pattern": "wrong-operator",
+      "fix_lines": 3
+    },
+    "debugbench_005_count_equal_and_divisible_pairs_in_an_array": {
+      "human_difficulty": "human-difficult",
+      "reasoning": "Wrong function arguments in make() call, need to understand the data structure logic",
+      "source": "DebugBench",
+      "bug_pattern": "wrong-variable",
+      "fix_lines": 3
+    },
+    "debugbench_006_can_place_flowers": {
+      "human_difficulty": "human-easy",
+      "reasoning": "Missing colon, wrong index (i+2 vs i+1), wrong variable name — each is an obvious typo/syntax fix",
+      "source": "DebugBench",
+      "bug_pattern": "multiple-error",
+      "fix_lines": 5
+    },
+    "debugbench_007_lexicographically_smallest_string_after_subst": {
+      "human_difficulty": "human-difficult",
+      "reasoning": "20-line fix with multiple scattered errors including corrupted identifiers",
+      "source": "DebugBench",
+      "bug_pattern": "multiple-error",
+      "fix_lines": 20
+    },
+    "debugbench_008_construct_quad_tree": {
+      "human_difficulty": "human-difficult",
+      "reasoning": "25-line fix, multiple errors in quad tree construction including wrong args and broken control flow",
+      "source": "DebugBench",
+      "bug_pattern": "multiple-error",
+      "fix_lines": 25
+    },
+    "debugbench_009_all_ancestors_of_a_node_in_a_directed_acyclic": {
+      "human_difficulty": "human-difficult",
+      "reasoning": "25-line fix, duplicated/corrupt loop, == vs = confusion, wrong variable names",
+      "source": "DebugBench",
+      "bug_pattern": "multiple-error",
+      "fix_lines": 25
+    },
+    "debugbench_010_find_closest_node_to_given_two_nodes": {
+      "human_difficulty": "human-easy",
+      "reasoning": "Type annotation errors (List<int> vs List[int], var self.x vs self.x) — obvious syntax/reference issues",
+      "source": "DebugBench",
+      "bug_pattern": "multiple-error",
+      "fix_lines": 5
+    },
+    "debugbench_011_find_closest_node_to_given_two_nodes": {
+      "human_difficulty": "human-difficult",
+      "reasoning": "Wrong array index (it+1 vs it) in distance computation, requires understanding graph BFS",
+      "source": "DebugBench",
+      "bug_pattern": "wrong-variable",
+      "fix_lines": 3
+    },
+    "debugbench_012_corporate_flight_bookings": {
+      "human_difficulty": "human-easy",
+      "reasoning": "Undefined variable arr[x] instead of arr[lv-1], crash trace points directly to it",
+      "source": "DebugBench",
+      "bug_pattern": "reference-error",
+      "fix_lines": 4
+    },
+    "debugbench_013_can_place_flowers": {
+      "human_difficulty": "human-easy",
+      "reasoning": "Invalid else if syntax and wrong decrement, obvious syntax/reference errors",
+      "source": "DebugBench",
+      "bug_pattern": "reference-error",
+      "fix_lines": 4
+    },
+    "debugbench_014_moving_stones_until_consecutive_ii": {
+      "human_difficulty": "human-difficult",
+      "reasoning": "90+ line fix, complex sliding window logic with wrong index references",
+      "source": "DebugBench",
+      "bug_pattern": "wrong-variable",
+      "fix_lines": 90
+    },
+    "debugbench_015_create_components_with_same_value": {
+      "human_difficulty": "human-easy",
+      "reasoning": "self.fn(v,u) vs fn(v,u) — crash trace shows undefined method",
+      "source": "DebugBench",
+      "bug_pattern": "reference-error",
+      "fix_lines": 3
+    },
+    "debugbench_016_find_all_possible_recipes_from_given_supplies": {
+      "human_difficulty": "human-easy",
+      "reasoning": "Missing colon in for loop — SyntaxError with clear line number",
+      "source": "DebugBench",
+      "bug_pattern": "syntax-error",
+      "fix_lines": 4
+    },
+    "debugbench_017_find_mode_in_binary_search_tree": {
+      "human_difficulty": "human-easy",
+      "reasoning": "Missing colon in for loop — SyntaxError with clear line number",
+      "source": "DebugBench",
+      "bug_pattern": "syntax-error",
+      "fix_lines": 5
+    },
+    "debugbench_018_valid_arrangement_of_pairs": {
+      "human_difficulty": "human-easy",
+      "reasoning": "Unclosed parenthesis and wrong bracket — SyntaxError with clear location",
+      "source": "DebugBench",
+      "bug_pattern": "syntax-error",
+      "fix_lines": 3
+    },
+    "debugbench_019_check_if_two_string_arrays_are_equivalent": {
+      "human_difficulty": "human-easy",
+      "reasoning": "Assignment = instead of comparison ==, classic and obvious bug",
+      "source": "DebugBench",
+      "bug_pattern": "syntax-error",
+      "fix_lines": 4
+    },
+    "debugbench_020_stone_game_vi": {
+      "human_difficulty": "human-easy",
+      "reasoning": "Missing bracket in list comprehension — SyntaxError",
+      "source": "DebugBench",
+      "bug_pattern": "syntax-error",
+      "fix_lines": 3
+    },
+    "debugbench_021_kth_missing_positive_number": {
+      "human_difficulty": "human-easy",
+      "reasoning": "l+k-1 vs l+k, simple off-by-one in return value",
+      "source": "DebugBench",
+      "bug_pattern": "off-by-one",
+      "fix_lines": 3
+    },
+    "debugbench_022_check_if_point_is_reachable": {
+      "human_difficulty": "human-difficult",
+      "reasoning": "Power-of-2 check d!=0 vs d!=1, requires understanding the mathematical property",
+      "source": "DebugBench",
+      "bug_pattern": "wrong-variable",
+      "fix_lines": 3
+    },
+    "debugbench_023_isomorphic_strings": {
+      "human_difficulty": "human-easy",
+      "reasoning": "zip(s, t[:len(s)-1]) vs zip(s, t), obvious off-by-one in slicing",
+      "source": "DebugBench",
+      "bug_pattern": "off-by-one",
+      "fix_lines": 3
+    },
+    "debugbench_024_check_if_every_row_and_column_contains_all_nu": {
+      "human_difficulty": "human-difficult",
+      "reasoning": "Wrong index in validation dp_row[i][j] vs dp_row[i][matrix[i][j]-1], need to understand validation logic",
+      "source": "DebugBench",
+      "bug_pattern": "wrong-variable",
+      "fix_lines": 5
+    },
+    "debugbench_025_sliding_window_median": {
+      "human_difficulty": "human-difficult",
+      "reasoning": "Wrong function call (release vs get) in balanced BST, need to understand tree operations",
+      "source": "DebugBench",
+      "bug_pattern": "wrong-variable",
+      "fix_lines": 5
+    },
+    "debugbench_026_closest_dessert_cost": {
+      "human_difficulty": "human-difficult",
+      "reasoning": "i+2 vs i+1 in topping recursion, need to understand backtracking constraint",
+      "source": "DebugBench",
+      "bug_pattern": "wrong-operator",
+      "fix_lines": 3
+    },
+    "debugbench_027_length_of_the_longest_valid_substring": {
+      "human_difficulty": "human-difficult",
+      "reasoning": "Multiple errors including unclosed string, wrong index formula, undefined call",
+      "source": "DebugBench",
+      "bug_pattern": "multiple-error",
+      "fix_lines": 5
+    },
+    "debugbench_028_string_compression_ii": {
+      "human_difficulty": "human-difficult",
+      "reasoning": "Multiple errors in DP memoization including off-by-one and wrong condition",
+      "source": "DebugBench",
+      "bug_pattern": "multiple-error",
+      "fix_lines": 5
+    },
+    "debugbench_029_restore_ip_addresses": {
+      "human_difficulty": "human-easy",
+      "reasoning": "Missing parenthesis, = vs ==, unclosed string — each is obvious syntax/typo error",
+      "source": "DebugBench",
+      "bug_pattern": "multiple-error",
+      "fix_lines": 5
+    },
+    "debugbench_030_lexicographically_smallest_palindrome": {
+      "human_difficulty": "human-easy",
+      "reasoning": "Missing colon, wrong loop bound, += vs -= — each is obvious syntax/operator error",
+      "source": "DebugBench",
+      "bug_pattern": "multiple-error",
+      "fix_lines": 5
+    },
+    "debugbench_031_next_greater_element_i": {
+      "human_difficulty": "human-easy",
+      "reasoning": "Call to self.undefinedMethod() — crash trace directly shows undefined attribute",
+      "source": "DebugBench",
+      "bug_pattern": "reference-error",
+      "fix_lines": 3
+    },
+    "debugbench_032_string_compression_ii": {
+      "human_difficulty": "human-difficult",
+      "reasoning": "35-line fix, JavaScript syntax mixed into Python (var, Math.min), requires full rewrite",
+      "source": "DebugBench",
+      "bug_pattern": "reference-error",
+      "fix_lines": 35
+    },
+    "debugbench_033_find_the_value_of_the_partition": {
+      "human_difficulty": "human-easy",
+      "reasoning": "Array[int] instead of List[int] — crash trace shows NameError directly",
+      "source": "DebugBench",
+      "bug_pattern": "reference-error",
+      "fix_lines": 3
+    },
+    "debugbench_034_sliding_window_median": {
+      "human_difficulty": "human-difficult",
+      "reasoning": "Missing null check and wrong index in BST get(), need to understand balanced tree ops",
+      "source": "DebugBench",
+      "bug_pattern": "reference-error",
+      "fix_lines": 5
+    },
+    "debugbench_035_neighboring_bitwise_xor": {
+      "human_difficulty": "human-easy",
+      "reasoning": "Loop variable 'numbers' instead of 'derived' — NameError with clear trace",
+      "source": "DebugBench",
+      "bug_pattern": "reference-error",
+      "fix_lines": 3
+    },
+    "debugbench_036_add_edges_to_make_degrees_of_all_nodes_even": {
+      "human_difficulty": "human-easy",
+      "reasoning": "Assignment = instead of comparison == in two places — obvious from SyntaxError/logic",
+      "source": "DebugBench",
+      "bug_pattern": "syntax-error",
+      "fix_lines": 4
+    },
+    "debugbench_037_minimum_bit_flips_to_convert_number": {
+      "human_difficulty": "human-easy",
+      "reasoning": "Wrong indentation — IndentationError with clear line number",
+      "source": "DebugBench",
+      "bug_pattern": "syntax-error",
+      "fix_lines": 3
+    },
+    "debugbench_038_kth_largest_element_in_an_array": {
+      "human_difficulty": "human-easy",
+      "reasoning": "Missing colon after class definition — SyntaxError with clear location",
+      "source": "DebugBench",
+      "bug_pattern": "syntax-error",
+      "fix_lines": 3
+    },
+    "debugbench_039_grid_game": {
+      "human_difficulty": "human-easy",
+      "reasoning": "Wrong indentation of function and loop body — IndentationError with clear trace",
+      "source": "DebugBench",
+      "bug_pattern": "syntax-error",
+      "fix_lines": 18
+    },
+    "debugbench_040_sum_of_subarray_minimums": {
+      "human_difficulty": "human-easy",
+      "reasoning": "Missing closing parenthesis — SyntaxError with clear location",
+      "source": "DebugBench",
+      "bug_pattern": "syntax-error",
+      "fix_lines": 3
+    },
+    "mini_nightmare_config": {
+      "human_difficulty": "human-difficult",
+      "reasoning": "Class-level cache shared across instances, need to understand class vs instance state and cache invalidation",
+      "source": "Mini-nightmare",
+      "bug_pattern": "stale-cache",
+      "fix_lines": 4
+    },
+    "mini_nightmare_counter": {
+      "human_difficulty": "human-difficult",
+      "reasoning": "Race condition with thread-local read outside lock, need to understand threading semantics",
+      "source": "Mini-nightmare",
+      "bug_pattern": "race-condition",
+      "fix_lines": 8
+    },
+    "mini_nightmare_grader": {
+      "human_difficulty": "human-easy",
+      "reasoning": "Missing check that student has grades in all classes, obvious from test output",
+      "source": "Mini-nightmare",
+      "bug_pattern": "missing-condition",
+      "fix_lines": 2
+    },
+    "mini_nightmare_pandas_dataframe": {
+      "human_difficulty": "human-easy",
+      "reasoning": "Wrong column name 'Price' vs 'Fare', KeyError trace points directly to it",
+      "source": "Mini-nightmare",
+      "bug_pattern": "wrong-variable",
+      "fix_lines": 1
+    },
+    "mini_nightmare_patcher": {
+      "human_difficulty": "human-easy",
+      "reasoning": "Reversed line ranges accepted instead of rejected, obvious from test input",
+      "source": "Mini-nightmare",
+      "bug_pattern": "missing-condition",
+      "fix_lines": 3
+    },
+    "mini_nightmare_purr": {
+      "human_difficulty": "human-easy",
+      "reasoning": "elif hunger>20 checked after if hunger>10, obvious wrong condition order",
+      "source": "Mini-nightmare",
+      "bug_pattern": "logic-error",
+      "fix_lines": 5
+    },
+    "mini_nightmare_scientific_calculator": {
+      "human_difficulty": "human-easy",
+      "reasoning": "self.action vs self.action_str, AttributeError trace points directly to wrong attribute",
+      "source": "Mini-nightmare",
+      "bug_pattern": "wrong-variable",
+      "fix_lines": 1
+    },
+    "mini_nightmare_shopping_cart": {
+      "human_difficulty": "human-difficult",
+      "reasoning": "Discounts only applied to items added before discount, need to trace discount application timing",
+      "source": "Mini-nightmare",
+      "bug_pattern": "logic-error",
+      "fix_lines": 5
+    },
+    "mini_nightmare_sum_tree": {
+      "human_difficulty": "human-difficult",
+      "reasoning": "Test builds cyclic graph, need to understand that cycle detection is required in recursion",
+      "source": "Mini-nightmare",
+      "bug_pattern": "missing-condition",
+      "fix_lines": 6
+    },
+    "mini_nightmare_tomorrow_date": {
+      "human_difficulty": "human-easy",
+      "reasoning": "Incomplete leap year rule (missing %100 and %400 checks), well-known calendar rule",
+      "source": "Mini-nightmare",
+      "bug_pattern": "logic-error",
+      "fix_lines": 3
+    }
+  }
+}
