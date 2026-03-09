@@ -55,7 +55,7 @@ The experiments use a single local debugging-agent setup across all reported con
 
 \subsection{Two-Layer Difficulty Definition}
 
-The first layer separates tasks by human difficulty using manual labels in \texttt{docs/bug\_annotations\_v2.json}. A task is \texttt{human-easy} if an experienced programmer can identify and repair the bug directly from code and test feedback without substantial algorithmic reasoning. Otherwise it is \texttt{human-difficult}.
+The first layer separates tasks by human difficulty using manual task annotations. A task is \texttt{human-easy} if an experienced programmer can identify and repair the bug directly from code and test feedback without substantial algorithmic reasoning. Otherwise it is \texttt{human-difficult}.
 
 The second layer refines only the \texttt{human-easy} slice using five-seed Mistral Small \texttt{act\_only} pass counts:
 \begin{itemize}
@@ -363,7 +363,7 @@ Although this report does not include manual trajectory annotation, it does incl
 
 \begin{table*}[t]
 \centering
-\caption{Aggregate baseline trajectory metrics on HEAD20 from \texttt{head\_20\_from\_existing.json}.}
+\caption{Aggregate baseline trajectory metrics on HEAD20.}
 \label{tab:trajmetrics}
 \begin{tabular}{llcccccc}
 \toprule
