@@ -220,6 +220,202 @@ The most valuable next steps are multi-seed cross-model validation, subtype-leve
 
 On the current cleaned repository contents, HEAD is already a useful empirical object. A two-layer definition isolates a 20-task subset of human-easy bugs that remain difficult for a weak debugging agent. Hint experiments show that localization helps but does not eliminate the phenomenon. Matched reruns show that the best improvements come from controlling bad trajectories rather than simply changing protocol names. Reflexion ablations weaken the claim that Episode 2 is a stable source of improvement. Finally, a Scout recheck shows that the subset remains difficult for an independent model family. These results are sufficient for a course report and provide a concrete base for later, more ambitious submission-oriented analyses.
 
+\appendix
+
+\section{Appendix Overview}
+
+This appendix is intentionally restricted to artifacts already present in the public course repository at the time of writing. In particular, it includes:
+\begin{itemize}
+    \item the canonical two-layer classification files;
+    \item the HEAD20 aggregate JSON used for hint, episode, and trajectory summaries;
+    \item the matched Mistral protocol--strategy rerun;
+    \item the matched Reflexion mechanism ablation;
+    \item the single-seed post-fix Scout recheck.
+\end{itemize}
+
+It does \emph{not} include later local-only analyses such as multi-seed Scout/Minimax reruns, subtype taxonomy, or manual trajectory annotation, since those are not part of the current remote repository state.
+
+\section{Canonical Artifact Paths}
+
+The course report is backed by the following repository artifacts.
+
+\begin{itemize}
+    \item \texttt{docs/report/merged\_5seed\_act\_only\_baseline.json}
+    \item \texttt{docs/report/two\_layer\_classification.json}
+    \item \texttt{docs/report/two\_layer\_classification.md}
+    \item \texttt{docs/report/head\_20\_from\_existing.json}
+    \item \texttt{docs/report/head\_20\_hint\_study\_report.md}
+    \item \texttt{docs/report/head\_20\_mistral\_matched\_protocol\_strategy.json}
+    \item \texttt{docs/report/head\_20\_mistral\_matched\_protocol\_strategy.md}
+    \item \texttt{docs/report/reflexion\_mechanism\_ablation\_head20.json}
+    \item \texttt{docs/report/reflexion\_mechanism\_ablation\_head20.md}
+    \item \texttt{docs/report/head20\_llama4scout\_recheck.md}
+\end{itemize}
+
+\section{Two-Layer Definition Details}
+
+The canonical HEAD definition uses five-seed Mistral Small \texttt{act\_only} performance inside the \texttt{human-easy} slice. The thresholds are repeated here for completeness.
+
+\begin{table}[h]
+\centering
+\caption{Operational definition of the second-layer categories inside \texttt{human-easy}.}
+\label{tab:defdetails}
+\begin{tabular}{ll}
+\toprule
+Category & Rule \\
+\midrule
+\texttt{Easy} & at least 3/5 Mistral \texttt{act\_only} passes \\
+\texttt{Intermediate} & exactly 2/5 passes \\
+\texttt{HEAD} & at most 1/5 passes \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+This definition is narrow on purpose. It is intended to produce a stable high-precision subset rather than a universal definition of AI debugging difficulty.
+
+\section{Hint Study Details}
+
+The main text reports the overall dose-response effect. Here we add the family-level breakdown explicitly discussed in the repository reports.
+
+\begin{table}[h]
+\centering
+\caption{Family-level Mistral hint response on HEAD20 under \texttt{react} baseline.}
+\label{tab:mistralhintfamily}
+\begin{tabular}{lccc}
+\toprule
+Family & L0 & L2 & L4 \\
+\midrule
+DebugBench & 0/7 & 1/7 & 1/7 \\
+Mini-nightmare & 0/4 & 0/4 & 0/4 \\
+QuixBugs & 1/9 & 4/9 & 7/9 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+This table makes the central asymmetry visible. The gain from line-level hints is real, but it is concentrated almost entirely in QuixBugs. That is why the repository narrative interprets localization as helpful but incomplete: the problems that remain on DebugBench and Mini-nightmare are not resolved simply by pointing the model at the right function or line.
+
+\section{Matched Mistral Protocol--Strategy Table}
+
+The main text only shows the top conditions. Table~\ref{tab:fullprotocols} records all twelve matched protocol--strategy settings in the remote report.
+
+\begin{table*}[t]
+\centering
+\caption{Full matched Mistral protocol--strategy ranking on HEAD20.}
+\label{tab:fullprotocols}
+\begin{tabular}{llccccc}
+\toprule
+Protocol & Strategy & Pass & Pass \% & Avg.\ tokens & DebugBench & QuixBugs \\
+\midrule
+\texttt{react} & \texttt{early\_stop\_restart} & 9/20 & 45.0 & 36{,}770 & 2/7 & 7/9 \\
+\texttt{reflexion} & \texttt{self\_consistency} & 9/20 & 45.0 & 37{,}288 & 2/7 & 7/9 \\
+\texttt{reflexion} & \texttt{early\_stop\_restart} & 8/20 & 40.0 & 39{,}143 & 1/7 & 7/9 \\
+\texttt{react} & \texttt{self\_consistency} & 8/20 & 40.0 & 42{,}329 & 2/7 & 6/9 \\
+\texttt{act\_only} & \texttt{checklist} & 7/20 & 35.0 & 38{,}778 & 0/7 & 6/9 \\
+\texttt{react} & \texttt{baseline} & 7/20 & 35.0 & 39{,}141 & 1/7 & 6/9 \\
+\texttt{act\_only} & \texttt{early\_stop\_restart} & 7/20 & 35.0 & 41{,}825 & 2/7 & 5/9 \\
+\texttt{reflexion} & \texttt{baseline} & 6/20 & 30.0 & 39{,}582 & 1/7 & 5/9 \\
+\texttt{act\_only} & \texttt{baseline} & 5/20 & 25.0 & 41{,}638 & 0/7 & 5/9 \\
+\texttt{react} & \texttt{checklist} & 5/20 & 25.0 & 44{,}034 & 0/7 & 5/9 \\
+\texttt{act\_only} & \texttt{self\_consistency} & 5/20 & 25.0 & 45{,}586 & 0/7 & 5/9 \\
+\texttt{reflexion} & \texttt{checklist} & 4/20 & 20.0 & 45{,}406 & 0/7 & 4/9 \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+Mini-nightmare is omitted from the last two columns because it is almost entirely zero in this matched rerun; only \texttt{act\_only + checklist} solves one of the four tasks. The appendix table therefore makes one of the course report's main empirical patterns very explicit: most of the variation comes from QuixBugs and, to a lesser extent, DebugBench.
+
+\section{Reflexion Mechanism Details}
+
+The repository includes both an aggregate markdown summary and a JSON file with task-level swaps. The core ablation numbers are repeated in Table~\ref{tab:ablationdetail}, followed by the most informative readouts.
+
+\begin{table}[h]
+\centering
+\caption{Detailed Reflexion mechanism ablation.}
+\label{tab:ablationdetail}
+\begin{tabular}{lcc}
+\toprule
+Condition & Pass & Avg.\ tokens \\
+\midrule
+\texttt{react\_baseline} & 8/20 & 38{,}306 \\
+\texttt{reflexion\_baseline} & 8/20 & 37{,}230 \\
+\texttt{reflexion\_ep1\_only} & 7/20 & 37{,}813 \\
+\texttt{restart\_without\_reflection} & 5/20 & 46{,}284 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Additional mechanism readouts from the remote report:
+\begin{itemize}
+    \item Episode-1 pass rate: 7/20 (35\%).
+    \item Episode-2 rescues in baseline: 0.
+    \item Episode-2 rescues in restart-without-reflection: 0.
+    \item Baseline success but restart-without-reflection fail: 5 tasks.
+    \item Baseline success but ReAct fail: 1 task.
+    \item ReAct success but baseline fail: 1 task.
+\end{itemize}
+
+These details support the conservative reading used in the main text: the matched ablation does not justify a strong claim that Reflexion's second episode is the main driver of gains on HEAD20.
+
+\section{Independent Scout Recheck Details}
+
+The remote repository contains the post-fix Scout recheck, which is important because the initial Scout calibration was unusable before tool-call compatibility was fixed. The valid recheck therefore has two parts: a compatibility note and a performance summary.
+
+\subsection{Compatibility Note}
+
+The report \texttt{head20\_llama4scout\_recheck.md} records that Scout initially emitted bracketed pseudo-tool calls such as \texttt{[run\_tests()]} rather than formal API tool calls. The fallback parser in the runner was then extended to accept this format, and only the post-fix rerun is treated as valid evidence.
+
+\subsection{Task-Level Summary}
+
+The eight successful Scout tasks in the current public repository are:
+\begin{itemize}
+    \item \texttt{debugbench\_012\_corporate\_flight\_bookings}
+    \item \texttt{debugbench\_031\_next\_greater\_element\_i}
+    \item \texttt{debugbench\_037\_minimum\_bit\_flips\_to\_convert\_number}
+    \item \texttt{quixbugs\_is\_valid\_parenthesization}
+    \item \texttt{quixbugs\_mergesort}
+    \item \texttt{quixbugs\_quicksort}
+    \item \texttt{quixbugs\_to\_base}
+    \item \texttt{quixbugs\_wrap}
+\end{itemize}
+
+The most important family-level failure is Mini-nightmare: Scout solves 0/4 tasks there even after the tool-call fix. This is why the Scout result is informative despite being single-seed in the public repository.
+
+\section{Trajectory Aggregate Metrics Already Present in the Repository}
+
+Although the public repository does not yet include manual trajectory annotation, it does include aggregated edit/test trajectory metrics in \texttt{head\_20\_from\_existing.json}. These metrics are descriptive rather than causal, but they are useful as an appendix record.
+
+\begin{table*}[t]
+\centering
+\caption{Aggregate baseline trajectory metrics on HEAD20 from \texttt{head\_20\_from\_existing.json}.}
+\label{tab:trajmetrics}
+\begin{tabular}{llcccccc}
+\toprule
+Model & Protocol & Pass & First edit & First fix & Edit$\rightarrow$fix gap & Patch attempts & Test runs \\
+\midrule
+120B & \texttt{act\_only} & 15/20 & 5.3 & 8.7 & 3.6 & 2.9 & 2.5 \\
+120B & \texttt{react} & 14/20 & 5.5 & 9.1 & 3.9 & 2.8 & 2.6 \\
+120B & \texttt{reflexion} & 16/20 & 5.5 & 9.7 & 4.0 & 2.4 & 2.7 \\
+Mistral & \texttt{act\_only} & 4/20 & 5.2 & 8.2 & 3.0 & 5.4 & 3.4 \\
+Mistral & \texttt{react} & 1/20 & 5.3 & 8.0 & --- & 4.8 & 3.5 \\
+Mistral & \texttt{reflexion} & 7/20 & 5.1 & 8.9 & 3.3 & 5.0 & 3.5 \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+These numbers are one reason the course report treats HEAD as more than a pure localization problem. The weak model often starts editing at roughly the same point as the strong model, but consumes more patch attempts and test runs while converting fewer runs into correct fixes.
+
+\section{Repository Reproduction Notes}
+
+The current remote repository already includes the scripts used to produce the public course-report artifacts:
+\begin{itemize}
+    \item \texttt{scripts/head\_20\_data\_from\_existing.py}
+    \item \texttt{scripts/analyze\_head20\_hint\_study.py}
+    \item \texttt{scripts/run\_mistral\_head20\_matched\_protocol\_strategy.py}
+    \item \texttt{scripts/run\_reflexion\_mechanism\_ablation.py}
+\end{itemize}
+
+This makes the current report auditable from the remote repository alone, even though it does not yet include the later submission-oriented analyses.
+
 \bibliographystyle{plainnat}
 \bibliography{references}
 
