@@ -26,7 +26,7 @@
 \maketitle
 
 \begin{abstract}
-We study a model-relative regime of debugging tasks that are easy for humans but difficult for code-repair agents. Using a two-layer definition, we first separate tasks by human difficulty and then isolate a canonical HEAD-20 subset inside the human-easy slice via five-seed Mistral Small \texttt{act\_only} performance. On the current repository contents, HEAD is supported by four main findings. First, the two-layer split exposes a non-trivial human-easy left tail: among 44 human-easy tasks, 20 remain HEAD under the weak-model baseline. Second, hint experiments show that localization information partly restores weak-model performance, but the gains are concentrated in QuixBugs, indicating that repair generation remains the broader bottleneck. Third, matched protocol--strategy reruns show that plain protocol switching is not enough on HEAD; the best Mistral conditions are \texttt{react + early\_stop\_restart} and \texttt{reflexion + self\_consistency}, both at 45\%. Fourth, after fixing tool-call compatibility, an independent \texttt{Llama-4-Scout} recheck still solves only 8/20 tasks, supporting cross-model robustness of the subset. As a course report, this paper emphasizes the current reproducible evidence in the cleaned repository and leaves deeper trajectory-level mechanism analysis to future work.
+We study a model-relative regime of debugging tasks that are easy for humans but difficult for code-repair agents. Using a two-layer definition, we first separate tasks by human difficulty and then isolate a canonical HEAD-20 subset inside the human-easy slice via five-seed Mistral Small \texttt{act\_only} performance. HEAD is supported by four main findings. First, the two-layer split exposes a non-trivial human-easy left tail: among 44 human-easy tasks, 20 remain HEAD under the weak-model baseline. Second, hint experiments show that localization information partly restores weak-model performance, but the gains are concentrated in QuixBugs, indicating that repair generation remains the broader bottleneck. Third, matched protocol--strategy reruns show that plain protocol switching is not enough on HEAD; the best Mistral conditions are \texttt{react + early\_stop\_restart} and \texttt{reflexion + self\_consistency}, both at 45\%. Fourth, after fixing tool-call compatibility, an independent \texttt{Llama-4-Scout} recheck still solves only 8/20 tasks, supporting cross-model robustness of the subset. As a course report, this paper emphasizes the current experimental evidence and leaves deeper trajectory-level mechanism analysis to future work.
 \end{abstract}
 
 \section{Introduction}
@@ -35,7 +35,7 @@ Modern code agents can solve many benchmark tasks, yet they still fail on bugs t
 
 This report studies that regime under the name \textbf{HEAD}: \emph{Human-Easy but AI-Difficult}. The key idea is that HEAD is not a claim about intrinsic bug hardness. Instead, it is an operational category defined relative to a debugging setup: a human-easy task counts as HEAD when a weak debugging agent fails on it consistently under a canonical baseline. This lets us separate \emph{definition} from \emph{validation}. Mistral Small under \texttt{act\_only} provides the definition baseline, while additional experiments probe whether the same subset remains difficult under other prompts, strategies, and model families.
 
-The course-version contribution of this repository is empirical and restrained:
+The course-version contribution is empirical and restrained:
 \begin{enumerate}
     \item a two-layer bug classification that isolates a 20-task canonical HEAD subset;
     \item a hint study showing that localization helps but does not fully explain HEAD;
@@ -48,14 +48,14 @@ The course-version contribution of this repository is empirical and restrained:
 
 \subsection{Benchmarks}
 
-The cleaned repository contains 90 debugging tasks drawn from three sources:
+The study contains 90 debugging tasks drawn from three sources:
 \begin{itemize}
     \item \textbf{QuixBugs}: 40 algorithmic program-repair tasks;
     \item \textbf{Mini-nightmare}: 10 compact, realistic debugging tasks;
     \item \textbf{DebugBench}: 40 debugging tasks spanning reference, syntax, logic, and multiple-error patterns~\citep{wu2024debugbench}.
 \end{itemize}
 
-The active experiments use the local task copies under \texttt{tasks\_local/}, together with the local agent implementation under \texttt{agent\_local/}. The canonical repository reports are listed in \texttt{docs/report/README.md}.
+The experiments use a single local debugging-agent setup across all reported conditions so that task difficulty, prompting, and model family can be compared under a shared environment.
 
 \subsection{Two-Layer Difficulty Definition}
 
@@ -72,7 +72,7 @@ This design makes HEAD a high-precision operational subset rather than a univers
 
 \begin{table}[t]
 \centering
-\caption{Two-layer classification used in the current repository.}
+\caption{Two-layer classification used in this report.}
 \label{tab:classification}
 \begin{tabular}{lr}
 \toprule
@@ -89,7 +89,7 @@ Slice & Count \\
 
 \subsection{Models and Conditions}
 
-The active repository materials support the following course-report comparisons:
+The course-report comparisons cover the following model roles:
 \begin{itemize}
     \item \textbf{Definition model}: \texttt{api-mistral-small-3.2-2506};
     \item \textbf{Strong reference}: \texttt{api-gpt-oss-120b} in the hint study;
@@ -125,7 +125,7 @@ L4 (line-level hint) & 8/20 (40\%) & --- \\
 \end{tabular}
 \end{table}
 
-Table~\ref{tab:hints} supports two claims. First, localization information clearly matters: Mistral improves from 5\% to 25\% with function-level hints and to 40\% with line-level hints. Second, localization is not the whole story. The repository reports show that the Mistral gains are concentrated in QuixBugs, while DebugBench and Mini-nightmare remain mostly unsolved. This pattern suggests that repair generation is still the more general bottleneck, especially for tasks with stronger structural or multi-line repair demands.
+Table~\ref{tab:hints} supports two claims. First, localization information clearly matters: Mistral improves from 5\% to 25\% with function-level hints and to 40\% with line-level hints. Second, localization is not the whole story. The Mistral gains are concentrated in QuixBugs, while DebugBench and Mini-nightmare remain mostly unsolved. This pattern suggests that repair generation is still the more general bottleneck, especially for tasks with stronger structural or multi-line repair demands.
 
 For the strong reference model, 120B already solves 70\% of HEAD20 without hints and reaches 100\% with function-level hints. In this regime, hints behave more like context sharpening than like a rescue mechanism.
 
@@ -154,7 +154,7 @@ Two observations follow from Table~\ref{tab:protocols}. First, \texttt{act\_only
 
 \subsection{Reflexion does not show a stable aggregate edge in the matched ablation}
 
-The repository also includes a matched Reflexion mechanism ablation on HEAD20. All conditions were rerun in one batch to avoid comparing a new ablation to older baselines.
+We also include a matched Reflexion mechanism ablation on HEAD20. All conditions were rerun in one batch to avoid comparing a new ablation to older baselines.
 
 \begin{table}[t]
 \centering
@@ -176,7 +176,7 @@ The ablation does not reproduce a clear aggregate Reflexion-over-ReAct advantage
 
 \subsection{The HEAD subset transfers to a different model family}
 
-The final result in the current repository is an independent recheck with \texttt{api-llama-4-scout}. After extending the runner to accept the model's bracketed pseudo-tool-call format, Scout solves only 8/20 tasks under \texttt{act\_only + baseline}.
+The final main-text result is an independent recheck with \texttt{api-llama-4-scout}. After extending the runner to accept the model's bracketed pseudo-tool-call format, Scout solves only 8/20 tasks under \texttt{act\_only + baseline}.
 
 \begin{table}[t]
 \centering
@@ -198,18 +198,18 @@ This is not a redefinition of HEAD; Mistral remains the definition model. Instea
 
 \section{Discussion}
 
-Taken together, the current repository contents support a restrained but coherent story.
+Taken together, these experiments support a restrained but coherent story.
 
 First, HEAD is a meaningful category inside human-easy tasks rather than a relabeling of benchmark-hard cases. Second, localization matters, but only up to a point: line-level hints substantially help some tasks, especially QuixBugs, while other tasks remain hard even when the search area is narrowed. Third, the best weak-model gains come from managing search trajectories rather than simply switching to a heavier protocol. Fourth, the Mistral-defined subset survives a first independent recheck with Scout, which makes the category more plausible as a model-relative regime rather than a one-model accident.
 
-This course report intentionally stops short of stronger claims about failure mechanisms. The current remote repository does not yet include the later trajectory annotation, subtype taxonomy, or multi-seed cross-model stability work. Those analyses are better treated as follow-up work for a possible submission-oriented paper rather than folded into the course version.
+This course report intentionally stops short of stronger claims about failure mechanisms. More detailed trajectory annotation, subtype taxonomy, and broader multi-seed cross-model stability analysis are better treated as follow-up work for a submission-oriented paper rather than folded into the course version.
 
 \section{Limitations and Future Work}
 
 The report has four main limitations.
 \begin{itemize}
     \item The canonical HEAD definition is tied to one weak model family and one protocol baseline.
-    \item Some results, especially the Scout recheck, are currently single-seed in the public repository.
+    \item Some results, especially the Scout recheck, are currently single-seed.
     \item The current evidence is mostly aggregate; it shows \emph{that} HEAD exists, but not yet a full trajectory-level account of \emph{why} each subtype fails.
     \item Strong-model evidence is narrower than the weak-model evidence and is mostly visible through the hint study.
 \end{itemize}
@@ -218,39 +218,20 @@ The most valuable next steps are multi-seed cross-model validation, subtype-leve
 
 \section{Conclusion}
 
-On the current cleaned repository contents, HEAD is already a useful empirical object. A two-layer definition isolates a 20-task subset of human-easy bugs that remain difficult for a weak debugging agent. Hint experiments show that localization helps but does not eliminate the phenomenon. Matched reruns show that the best improvements come from controlling bad trajectories rather than simply changing protocol names. Reflexion ablations weaken the claim that Episode 2 is a stable source of improvement. Finally, a Scout recheck shows that the subset remains difficult for an independent model family. These results are sufficient for a course report and provide a concrete base for later, more ambitious submission-oriented analyses.
+Within the scope of this study, HEAD is already a useful empirical object. A two-layer definition isolates a 20-task subset of human-easy bugs that remain difficult for a weak debugging agent. Hint experiments show that localization helps but does not eliminate the phenomenon. Matched reruns show that the best improvements come from controlling bad trajectories rather than simply changing protocol names. Reflexion ablations weaken the claim that Episode 2 is a stable source of improvement. Finally, a Scout recheck shows that the subset remains difficult for an independent model family. These results are sufficient for a course report and provide a concrete base for later, more ambitious submission-oriented analyses.
 
 \appendix
 
 \section{Appendix Overview}
 
-This appendix is intentionally restricted to artifacts already present in the public course repository at the time of writing. In particular, it includes:
+This appendix collects experiment details that support the main text. In particular, it includes:
 \begin{itemize}
-    \item the canonical two-layer classification files;
-    \item the HEAD20 aggregate JSON used for hint, episode, and trajectory summaries;
     \item the matched Mistral protocol--strategy rerun;
     \item the matched Reflexion mechanism ablation;
     \item the single-seed post-fix Scout recheck.
 \end{itemize}
 
-It does \emph{not} include later local-only analyses such as multi-seed Scout/Minimax reruns, subtype taxonomy, or manual trajectory annotation, since those are not part of the current remote repository state.
-
-\section{Canonical Artifact Paths}
-
-The course report is backed by the following repository artifacts.
-
-\begin{itemize}
-    \item \texttt{docs/report/merged\_5seed\_act\_only\_baseline.json}
-    \item \texttt{docs/report/two\_layer\_classification.json}
-    \item \texttt{docs/report/two\_layer\_classification.md}
-    \item \texttt{docs/report/head\_20\_from\_existing.json}
-    \item \texttt{docs/report/head\_20\_hint\_study\_report.md}
-    \item \texttt{docs/report/head\_20\_mistral\_matched\_protocol\_strategy.json}
-    \item \texttt{docs/report/head\_20\_mistral\_matched\_protocol\_strategy.md}
-    \item \texttt{docs/report/reflexion\_mechanism\_ablation\_head20.json}
-    \item \texttt{docs/report/reflexion\_mechanism\_ablation\_head20.md}
-    \item \texttt{docs/report/head20\_llama4scout\_recheck.md}
-\end{itemize}
+It does \emph{not} include later exploratory analyses such as broader multi-seed model sweeps, subtype taxonomy, or manual trajectory annotation.
 
 \section{Two-Layer Definition Details}
 
@@ -275,7 +256,7 @@ This definition is narrow on purpose. It is intended to produce a stable high-pr
 
 \section{Hint Study Details}
 
-The main text reports the overall dose-response effect. Here we add the family-level breakdown explicitly discussed in the repository reports.
+The main text reports the overall dose-response effect. Here we add the corresponding family-level breakdown.
 
 \begin{table}[h]
 \centering
@@ -292,11 +273,11 @@ QuixBugs & 1/9 & 4/9 & 7/9 \\
 \end{tabular}
 \end{table}
 
-This table makes the central asymmetry visible. The gain from line-level hints is real, but it is concentrated almost entirely in QuixBugs. That is why the repository narrative interprets localization as helpful but incomplete: the problems that remain on DebugBench and Mini-nightmare are not resolved simply by pointing the model at the right function or line.
+This table makes the central asymmetry visible. The gain from line-level hints is real, but it is concentrated almost entirely in QuixBugs. That is why the main text interprets localization as helpful but incomplete: the problems that remain on DebugBench and Mini-nightmare are not resolved simply by pointing the model at the right function or line.
 
 \section{Matched Mistral Protocol--Strategy Table}
 
-The main text only shows the top conditions. Table~\ref{tab:fullprotocols} records all twelve matched protocol--strategy settings in the remote report.
+The main text only shows the top conditions. Table~\ref{tab:fullprotocols} records all twelve matched protocol--strategy settings.
 
 \begin{table*}[t]
 \centering
@@ -326,7 +307,7 @@ Mini-nightmare is omitted from the last two columns because it is almost entirel
 
 \section{Reflexion Mechanism Details}
 
-The repository includes both an aggregate markdown summary and a JSON file with task-level swaps. The core ablation numbers are repeated in Table~\ref{tab:ablationdetail}, followed by the most informative readouts.
+The ablation contains both aggregate pass rates and task-level swaps. The core ablation numbers are repeated in Table~\ref{tab:ablationdetail}, followed by the most informative readouts.
 
 \begin{table}[h]
 \centering
@@ -344,7 +325,7 @@ Condition & Pass & Avg.\ tokens \\
 \end{tabular}
 \end{table}
 
-Additional mechanism readouts from the remote report:
+Additional mechanism readouts:
 \begin{itemize}
     \item Episode-1 pass rate: 7/20 (35\%).
     \item Episode-2 rescues in baseline: 0.
@@ -358,15 +339,15 @@ These details support the conservative reading used in the main text: the matche
 
 \section{Independent Scout Recheck Details}
 
-The remote repository contains the post-fix Scout recheck, which is important because the initial Scout calibration was unusable before tool-call compatibility was fixed. The valid recheck therefore has two parts: a compatibility note and a performance summary.
+The post-fix Scout recheck is important because the initial Scout calibration was unusable before tool-call compatibility was fixed. The valid recheck therefore has two parts: a compatibility note and a performance summary.
 
 \subsection{Compatibility Note}
 
-The report \texttt{head20\_llama4scout\_recheck.md} records that Scout initially emitted bracketed pseudo-tool calls such as \texttt{[run\_tests()]} rather than formal API tool calls. The fallback parser in the runner was then extended to accept this format, and only the post-fix rerun is treated as valid evidence.
+Scout initially emitted bracketed pseudo-tool calls such as \texttt{[run\_tests()]} rather than formal API tool calls. The fallback parser was then extended to accept this format, and only the post-fix rerun is treated as valid evidence.
 
 \subsection{Task-Level Summary}
 
-The eight successful Scout tasks in the current public repository are:
+The eight successful Scout tasks are:
 \begin{itemize}
     \item \texttt{debugbench\_012\_corporate\_flight\_bookings}
     \item \texttt{debugbench\_031\_next\_greater\_element\_i}
@@ -378,11 +359,11 @@ The eight successful Scout tasks in the current public repository are:
     \item \texttt{quixbugs\_wrap}
 \end{itemize}
 
-The most important family-level failure is Mini-nightmare: Scout solves 0/4 tasks there even after the tool-call fix. This is why the Scout result is informative despite being single-seed in the public repository.
+The most important family-level failure is Mini-nightmare: Scout solves 0/4 tasks there even after the tool-call fix. This is why the Scout result is informative despite being single-seed.
 
 \section{Trajectory Aggregate Metrics Already Present in the Repository}
 
-Although the public repository does not yet include manual trajectory annotation, it does include aggregated edit/test trajectory metrics in \texttt{head\_20\_from\_existing.json}. These metrics are descriptive rather than causal, but they are useful as an appendix record.
+Although this report does not include manual trajectory annotation, it does include aggregated edit/test trajectory metrics. These metrics are descriptive rather than causal, but they are useful as an appendix record.
 
 \begin{table*}[t]
 \centering
@@ -404,17 +385,9 @@ Mistral & \texttt{reflexion} & 7/20 & 5.1 & 8.9 & 3.3 & 5.0 & 3.5 \\
 
 These numbers are one reason the course report treats HEAD as more than a pure localization problem. The weak model often starts editing at roughly the same point as the strong model, but consumes more patch attempts and test runs while converting fewer runs into correct fixes.
 
-\section{Repository Reproduction Notes}
+\section{Appendix Summary}
 
-The current remote repository already includes the scripts used to produce the public course-report artifacts:
-\begin{itemize}
-    \item \texttt{scripts/head\_20\_data\_from\_existing.py}
-    \item \texttt{scripts/analyze\_head20\_hint\_study.py}
-    \item \texttt{scripts/run\_mistral\_head20\_matched\_protocol\_strategy.py}
-    \item \texttt{scripts/run\_reflexion\_mechanism\_ablation.py}
-\end{itemize}
-
-This makes the current report auditable from the remote repository alone, even though it does not yet include the later submission-oriented analyses.
+The appendix expands the main text in four directions: the full second-layer definition, family-level hint response, the complete matched protocol--strategy table, and detailed Reflexion/Scout readouts. Together with the aggregate trajectory table, these additions make the report self-contained without changing the main claims.
 
 \bibliographystyle{plainnat}
 \bibliography{references}
