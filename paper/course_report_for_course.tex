@@ -22,14 +22,14 @@
 \maketitle
 
 \begin{abstract}
-We study a model-relative regime of debugging tasks that are easy for humans but difficult for code-repair agents. Using a two-layer definition, we first separate tasks by human difficulty and then isolate a canonical HEAD-20 subset inside the human-easy slice via five-seed Mistral Small \texttt{act\_only} performance. HEAD is supported by four main findings. First, the two-layer split exposes a non-trivial human-easy left tail: among 44 human-easy tasks, 20 remain HEAD under the weak-model baseline. Second, hint experiments show that localization information partly restores weak-model performance, but the gains are concentrated in QuixBugs, indicating that repair generation remains the broader bottleneck. Third, matched protocol--strategy reruns show that plain protocol switching is not enough on HEAD; the best Mistral conditions are \texttt{react + early\_stop\_restart} and \texttt{reflexion + self\_consistency}, both at 45\%. Fourth, after fixing tool-call compatibility, an independent \texttt{Llama-4-Scout} recheck still solves only 8/20 tasks, supporting cross-model robustness of the subset.
+We study a model-relative regime of debugging tasks that are easy for humans but difficult for code-repair agents. Using a two-layer definition, we first separate tasks by human difficulty and then isolate a canonical HEAD-20 subset inside the human-easy slice via five-seed Mistral Small \texttt{act\_only} performance. HEAD is supported by five findings. First, the two-layer split exposes a non-trivial human-easy left tail: among 44 human-easy tasks, 20 remain HEAD under the weak-model baseline. Second, the human-difficulty layer is not a loose intuition but a manual rubric over 90 tasks that distinguishes recognizable local bug patterns from tasks requiring deeper algorithmic or stateful reasoning. Third, hint experiments show that localization information partly restores weak-model performance, but the gains are concentrated in QuixBugs, indicating that repair generation remains the broader bottleneck. Fourth, matched protocol--strategy reruns show that plain protocol switching is not enough on HEAD; the best Mistral conditions are \texttt{react + early\_stop\_restart} and \texttt{reflexion + self\_consistency}, both at 45\%. Fifth, after fixing tool-call compatibility, an independent \texttt{Llama-4-Scout} recheck still solves only 8/20 tasks, supporting cross-model robustness of the subset.
 \end{abstract}
 
 \section{Introduction}
 
 Modern code agents can solve many benchmark tasks, yet they still fail on bugs that human programmers would regard as straightforward. This mismatch suggests that model capability does not align cleanly with human notions of bug difficulty. Rather than treating all failures as belonging to one hard bucket, we ask whether there exists a structured regime of tasks that are easy for humans but disproportionately difficult for agents. This question sits next to recent agentic debugging work built on ReAct, Reflexion, SWE-agent, SWE-bench+, DebugBench, RepairAgent, and InspectCoder~\citep{yao2023react,shinn2023reflexion,yang2024sweagent,jimenez2024swebenchplus,wu2024debugbench,repairagent2024,inspectcoder2025}.
 
-This report studies that regime under the name \textbf{HEAD}: \emph{Human-Easy but AI-Difficult}. The key idea is that HEAD is not a claim about intrinsic bug hardness. Instead, it is an operational category defined relative to a debugging setup: a human-easy task counts as HEAD when a weak debugging agent fails on it consistently under a canonical baseline. This lets us separate \emph{definition} from \emph{validation}. Mistral Small under \texttt{act\_only} provides the definition baseline, while additional experiments probe whether the same subset remains difficult under other prompts, strategies, and model families.
+We study that regime under the name \textbf{HEAD}: \emph{Human-Easy but AI-Difficult}. The key idea is that HEAD is not a claim about intrinsic bug hardness. Instead, it is an operational category defined relative to a debugging setup: a human-easy task counts as HEAD when a weak debugging agent fails on it consistently under a canonical baseline. This lets us separate \emph{definition} from \emph{validation}. Mistral Small under \texttt{act\_only} provides the definition baseline, while additional experiments probe whether the same subset remains difficult under other prompts, strategies, and model families.
 
 The contribution is empirical and restrained:
 \begin{enumerate}
@@ -53,9 +53,29 @@ The study contains 90 debugging tasks drawn from three sources:
 
 The experiments use a single local debugging-agent setup across all reported conditions so that task difficulty, prompting, and model family can be compared under a shared environment.
 
+\begin{table*}[t]
+\centering
+\caption{Experimental design summarized by role rather than by chronological run order.}
+\label{tab:design}
+\begin{tabular}{llll}
+\toprule
+Layer & Scope & Models / conditions & Purpose \\
+\midrule
+Human-difficulty annotation & 90 tasks & manual rubric & separate human-easy from human-difficult \\
+AI-difficulty definition & 44 human-easy tasks & Mistral Small, \texttt{act\_only}, 5 seeds & define Easy / Intermediate / HEAD \\
+Hint study & HEAD20 & Mistral L0/L2/L4, 120B L0/L2 & test localization sensitivity \\
+Matched protocol study & HEAD20 & 3 protocols $\times$ 4 strategies, shared budgets & compare trajectory-control interventions \\
+Mechanism ablation & HEAD20 & ReAct / Reflexion matched reruns & test whether Episode 2 drives gains \\
+Cross-family recheck & HEAD20 & Llama-4-Scout, \texttt{act\_only} baseline & probe transfer beyond Mistral \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
 \subsection{Two-Layer Difficulty Definition}
 
-The first layer separates tasks by human difficulty using manual task annotations. A task is \texttt{human-easy} if an experienced programmer can identify and repair the bug directly from code and test feedback without substantial algorithmic reasoning. Otherwise it is \texttt{human-difficult}.
+The first layer separates tasks by human difficulty using manual task annotations over all 90 tasks. The annotation rubric is intentionally operational rather than psychological. A task is labeled \texttt{human-easy} when a competent programmer can find and repair the bug by recognizing a familiar error pattern directly from the code and test output, without reconstructing the surrounding algorithm in depth or tracing a long chain of state changes. Typical cases include syntax errors, typos, wrong variable or attribute names, obvious operator mistakes, simple off-by-one errors whose direction is revealed by the failing output, and missing returns or guard conditions that are already implied by the function contract.
+
+A task is labeled \texttt{human-difficult} when repairing it plausibly requires deeper algorithmic understanding, extended control-flow tracing, domain-specific reasoning, concurrency or mutable-state analysis, or untangling multiple interacting errors. The annotation records not only the binary label but also a short reasoning field, a coarse bug-pattern description, and the approximate fix region. The purpose of these annotations is to anchor the first layer in explicit repair criteria before any model outcomes are considered.
 
 The second layer refines only the \texttt{human-easy} slice using five-seed Mistral Small \texttt{act\_only} pass counts:
 \begin{itemize}
@@ -68,7 +88,7 @@ This design makes HEAD a high-precision operational subset rather than a univers
 
 \begin{table}[t]
 \centering
-\caption{Two-layer classification used in this report.}
+\caption{Two-layer classification used in this study.}
 \label{tab:classification}
 \begin{tabular}{lr}
 \toprule
@@ -79,6 +99,21 @@ Slice & Count \\
 \texttt{human-easy / Easy} & 16 \\
 \texttt{human-easy / Intermediate} & 8 \\
 \texttt{human-easy / HEAD} & 20 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[t]
+\centering
+\caption{Composition of the canonical HEAD20 subset by benchmark family.}
+\label{tab:headcomposition}
+\begin{tabular}{lc}
+\toprule
+Family & Count \\
+\midrule
+DebugBench & 7 \\
+Mini-nightmare & 4 \\
+QuixBugs & 9 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -100,7 +135,7 @@ The main protocol families are \texttt{act\_only}, \texttt{react}, and \texttt{r
 
 Table~\ref{tab:classification} shows the first main result: human-easy does not imply agent-easy. Among 44 tasks judged easy for humans, only 16 are easy for the Mistral baseline, 8 lie in an intermediate band, and 20 fall into the HEAD subset. This means nearly half of the human-easy slice still looks difficult to the weak agent under the canonical setup.
 
-This result is important because it separates HEAD from generic benchmark hardness. HEAD is not built from human-difficult tasks. It is the left tail \emph{inside} the human-easy region.
+This result is important because it separates HEAD from generic benchmark hardness. HEAD is not built from human-difficult tasks. It is the left tail \emph{inside} the human-easy region. Table~\ref{tab:headcomposition} further shows that the canonical subset is not tied to a single benchmark source: it contains 7 DebugBench tasks, 4 Mini-nightmare tasks, and 9 QuixBugs tasks. The phenomenon therefore survives across both algorithmic repair tasks and compact debugging tasks with more open-ended execution traces.
 
 \subsection{Hints help, but their benefits are uneven}
 
@@ -121,7 +156,7 @@ L4 (line-level hint) & 8/20 (40\%) & --- \\
 \end{tabular}
 \end{table}
 
-Table~\ref{tab:hints} supports two claims. First, localization information clearly matters: Mistral improves from 5\% to 25\% with function-level hints and to 40\% with line-level hints. Second, localization is not the whole story. The Mistral gains are concentrated in QuixBugs, while DebugBench and Mini-nightmare remain mostly unsolved. This pattern suggests that repair generation is still the more general bottleneck, especially for tasks with stronger structural or multi-line repair demands.
+Table~\ref{tab:hints} supports two claims. First, localization information clearly matters: Mistral improves from 5\% to 25\% with function-level hints and to 40\% with line-level hints. Second, localization is not the whole story. The Mistral gains are concentrated in QuixBugs, while DebugBench and Mini-nightmare remain mostly unsolved. At the family level, QuixBugs improves from 1/9 to 4/9 to 7/9 as hints become more specific, whereas DebugBench moves only from 0/7 to 1/7 to 1/7 and Mini-nightmare remains at 0/4 throughout. This asymmetry suggests that HEAD is not a single failure type. Some tasks mainly need sharper localization; others remain difficult even after the search region has been narrowed, which points more directly to repair synthesis and validation as the limiting stage.
 
 For the strong reference model, 120B already solves 70\% of HEAD20 without hints and reaches 100\% with function-level hints. In this regime, hints behave more like context sharpening than like a rescue mechanism.
 
@@ -148,6 +183,14 @@ Condition & Pass rate & Avg.\ tokens \\
 
 Two observations follow from Table~\ref{tab:protocols}. First, \texttt{act\_only} baseline is clearly insufficient on HEAD20. Second, the top conditions share a common property: they either restart earlier or diversify attempts. This points to a more general interpretation of HEAD: the weak model often needs help managing trajectory length and error persistence, not just more reasoning tokens.
 
+The broader ranking reinforces this interpretation. Plain baseline ordering is modestly separated---\texttt{act\_only} at 25\%, \texttt{reflexion} at 30\%, and \texttt{react} at 35\%---but none of these baseline moves is decisive on its own. The strongest conditions are the paired interventions that either cut off unproductive trajectories early (\texttt{early\_stop\_restart}) or allocate budget across multiple independent attempts (\texttt{self\_consistency}). The bottom of the ranking is also informative: \texttt{reflexion + checklist} falls to 20\% despite using the heaviest protocol, which argues against a simple ``more reasoning is better'' interpretation. On this subset, weak-model performance depends more on how the run budget is structured than on protocol label alone.
+
+\subsection{Trajectory aggregates indicate failure to converge rather than failure to start}
+
+Aggregate trajectory statistics reveal that weak-model failures on HEAD are not primarily delayed-activation failures. Across baseline conditions, both models begin editing at roughly the same point: the first edit arrives around turn 5 for both Mistral and 120B. The more striking gap appears after editing begins. On \texttt{act\_only}, 120B averages 2.9 patch attempts and 2.5 test runs while solving 15/20 tasks, whereas Mistral averages 5.4 patch attempts and 3.4 test runs while solving only 4/20. The same qualitative gap remains visible for \texttt{reflexion}: Mistral continues to consume more patch attempts and test executions per task than the stronger model, despite similar first-edit timing.
+
+These aggregates imply that HEAD is not mainly a regime where the weak model fails to locate a starting point. Instead, the weak model often reaches an editable region, begins modifying code, and still fails to convert those edits into a correct fix. The cost signature is therefore extended unsuccessful search rather than slow activation. This observation is consistent with the hint study: better localization helps some tasks, but even precise hints do not remove the broader convergence problem.
+
 \subsection{Reflexion does not show a stable aggregate edge in the matched ablation}
 
 We also include a matched Reflexion mechanism ablation on HEAD20. All conditions were rerun in one batch to avoid comparing a new ablation to older baselines.
@@ -170,6 +213,8 @@ Condition & Pass rate & Avg.\ tokens \\
 
 The ablation does not reproduce a clear aggregate Reflexion-over-ReAct advantage. Reflexion baseline ties ReAct baseline at 8/20, and neither two-episode condition produces an \texttt{Ep1 fail $\rightarrow$ Ep2 pass} rescue. Meanwhile, clean restart without reflection is both weaker and more expensive. The most conservative interpretation is therefore negative: in the current matched batch, Episode 2 is not a demonstrated positive contributor, and clean restart alone is not the source of any gain.
 
+This is substantively different from saying that Reflexion never helps. The narrower claim supported here is that the observed gains on HEAD20 are better explained by trajectory management than by a stable second-episode rescue mechanism. If Reflexion helps on this subset, it does so through a more entangled interaction with search control than through a reliable ``fail once, reflect, and recover'' pattern.
+
 \subsection{The HEAD subset transfers to a different model family}
 
 The final main-text result is an independent recheck with \texttt{api-llama-4-scout}. After extending the runner to accept the model's bracketed pseudo-tool-call format, Scout solves only 8/20 tasks under \texttt{act\_only + baseline}.
@@ -190,19 +235,19 @@ QuixBugs & 5/9 (55.6\%) & 29{,}531 \\
 \end{tabular}
 \end{table}
 
-This is not a redefinition of HEAD; Mistral remains the definition model. Instead, Scout acts as an external check on whether the same subset is still difficult for another family. The answer is yes. In particular, the complete failure on Mini-nightmare suggests that the hardest part of HEAD20 is not just an artifact of one model API or one prompt family.
+This is not a redefinition of HEAD; Mistral remains the definition model. Instead, Scout acts as an external check on whether the same subset is still difficult for another family. The answer is yes. In particular, the complete failure on Mini-nightmare suggests that the hardest part of HEAD20 is not just an artifact of one model API or one prompt family. The task-level successes are also informative: Scout primarily recovers QuixBugs and a few narrow DebugBench cases, while the more structurally demanding failures remain concentrated in the same region where Mistral hint response is weakest.
 
 \section{Discussion}
 
 Taken together, these experiments support a restrained but coherent story.
 
-First, HEAD is a meaningful category inside human-easy tasks rather than a relabeling of benchmark-hard cases. Second, localization matters, but only up to a point: line-level hints substantially help some tasks, especially QuixBugs, while other tasks remain hard even when the search area is narrowed. Third, the best weak-model gains come from managing search trajectories rather than simply switching to a heavier protocol. Fourth, the Mistral-defined subset survives a first independent recheck with Scout, which makes the category more plausible as a model-relative regime rather than a one-model accident.
+First, HEAD is a meaningful category inside human-easy tasks rather than a relabeling of benchmark-hard cases. Second, localization matters, but only up to a point: line-level hints substantially help some tasks, especially QuixBugs, while other tasks remain hard even when the search area is narrowed. Third, the trajectory aggregates suggest that many weak-model failures occur after editing has already started, which makes failure to converge a better description than failure to engage. Fourth, the best weak-model gains come from managing search trajectories rather than simply switching to a heavier protocol. Fifth, the Mistral-defined subset survives a first independent recheck with Scout, which makes the category more plausible as a model-relative regime rather than a one-model accident.
 
 This paper intentionally stops short of stronger claims about failure mechanisms. More detailed trajectory annotation, subtype taxonomy, and broader multi-seed cross-model stability analysis are left for follow-up work.
 
 \section{Limitations and Future Work}
 
-The report has four main limitations.
+The paper has four main limitations.
 \begin{itemize}
     \item The canonical HEAD definition is tied to one weak model family and one protocol baseline.
     \item Some results, especially the Scout recheck, are currently single-seed.
@@ -214,7 +259,7 @@ The most valuable next steps are multi-seed cross-model validation, subtype-leve
 
 \section{Conclusion}
 
-Within the scope of this study, HEAD is already a useful empirical object. A two-layer definition isolates a 20-task subset of human-easy bugs that remain difficult for a weak debugging agent. Hint experiments show that localization helps but does not eliminate the phenomenon. Matched reruns show that the best improvements come from controlling bad trajectories rather than simply changing protocol names. Reflexion ablations weaken the claim that Episode 2 is a stable source of improvement. Finally, a Scout recheck shows that the subset remains difficult for an independent model family.
+Within the scope of this study, HEAD is already a useful empirical object. A two-layer definition isolates a 20-task subset of human-easy bugs that remain difficult for a weak debugging agent. The human-difficulty layer makes explicit that these are not generic hard tasks: they are tasks whose fixes remain locally legible to a programmer, yet still frustrate the agent. Hint experiments show that localization helps but does not eliminate the phenomenon. Matched reruns show that the best improvements come from controlling bad trajectories rather than simply changing protocol names. Reflexion ablations weaken the claim that Episode 2 is a stable source of improvement. Finally, a Scout recheck shows that the subset remains difficult for an independent model family.
 
 \appendix
 
@@ -358,7 +403,7 @@ Mistral & \texttt{reflexion} & 7/20 & 5.1 & 8.9 & 3.3 & 5.0 & 3.5 \\
 \end{tabular}
 \end{table*}
 
-The weak model often starts editing at roughly the same point as the strong model, but consumes more patch attempts and test runs while converting fewer runs into correct fixes.
+The weak model often starts editing at roughly the same point as the strong model, but consumes more patch attempts and test runs while converting fewer runs into correct fixes. The aggregate pattern is therefore consistent with the main-text interpretation that HEAD failures are dominated more by unsuccessful post-edit search than by inability to begin acting.
 
 \bibliographystyle{plainnat}
 \bibliography{references}
