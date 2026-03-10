@@ -163,7 +163,7 @@ QuixBugs & 9 \\
 The model roles are:
 \begin{itemize}
     \item \textbf{Definition model}: \texttt{api-mistral-small-3.2-2506};
-    \item \textbf{Strong reference}: \texttt{api-gpt-oss-120b} in the \texttt{act\_only} hint reruns;
+    \item \textbf{Strong reference}: \texttt{api-gpt-oss-120b} as a strong-model comparison in the hint study, using the same \texttt{act\_only} protocol at L0/L2/L4;
     \item \textbf{Independent recheck}: \texttt{api-llama-4-scout}.
 \end{itemize}
 
@@ -205,7 +205,7 @@ This recheck does not redefine HEAD; Mistral remains the definition model. It do
 
 \subsubsection{Hints help unevenly, even within the definition protocol}
 
-The hint study keeps the definition protocol fixed and varies only localization information inside \texttt{act\_only}. Table~\ref{tab:hints} reports one complete Mistral run, one complete Mistral rerun, and one complete 120B run over all 20 HEAD tasks at levels L0/L2/L4.
+The hint study keeps the definition protocol fixed and varies only localization information inside \texttt{act\_only}. Table~\ref{tab:hints} reports two complete Mistral runs and one complete 120B strong-reference run over all 20 HEAD tasks at levels L0/L2/L4.
 
 \begin{table}[t]
 \centering
