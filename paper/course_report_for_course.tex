@@ -131,13 +131,17 @@ The main protocol families are \texttt{act\_only}, \texttt{react}, and \texttt{r
 
 \section{Main Results}
 
-\subsection{HEAD forms a real left tail inside human-easy tasks}
+The results are organized as a progression rather than as a flat list. We first establish that HEAD is a real slice inside the human-easy region. We then ask what kind of difficulty this slice reflects, using hints and trajectory aggregates as diagnosis tools. Next, we test which interventions help on the slice once it has been isolated. Finally, we ask whether the resulting subset remains difficult for a different model family.
+
+\subsection{Existence: HEAD forms a real left tail inside human-easy tasks}
 
 Table~\ref{tab:classification} shows the first main result: human-easy does not imply agent-easy. Among 44 tasks judged easy for humans, only 16 are easy for the Mistral baseline, 8 lie in an intermediate band, and 20 fall into the HEAD subset. This means nearly half of the human-easy slice still looks difficult to the weak agent under the canonical setup.
 
 This result is important because it separates HEAD from generic benchmark hardness. HEAD is not built from human-difficult tasks. It is the left tail \emph{inside} the human-easy region. Table~\ref{tab:headcomposition} further shows that the canonical subset is not tied to a single benchmark source: it contains 7 DebugBench tasks, 4 Mini-nightmare tasks, and 9 QuixBugs tasks. The phenomenon therefore survives across both algorithmic repair tasks and compact debugging tasks with more open-ended execution traces.
 
-\subsection{Hints help, but their benefits are uneven}
+\subsection{Diagnosis: HEAD combines localization sensitivity with a convergence bottleneck}
+
+\subsubsection{Hints help, but their benefits are uneven}
 
 The hint study uses \texttt{react} baseline runs with increasing localization information. The full current coverage includes all 20 HEAD tasks for Mistral at levels L0/L2/L4 and for 120B at L0/L2.
 
@@ -158,9 +162,33 @@ L4 (line-level hint) & 8/20 (40\%) & --- \\
 
 Table~\ref{tab:hints} supports two claims. First, localization information clearly matters: Mistral improves from 5\% to 25\% with function-level hints and to 40\% with line-level hints. Second, localization is not the whole story. The Mistral gains are concentrated in QuixBugs, while DebugBench and Mini-nightmare remain mostly unsolved. At the family level, reported in Appendix Table~\ref{tab:mistralhintfamily}, QuixBugs improves from 1/9 to 4/9 to 7/9 as hints become more specific, whereas DebugBench moves only from 0/7 to 1/7 to 1/7 and Mini-nightmare remains at 0/4 throughout. This asymmetry suggests that HEAD is not a single failure type. Some tasks mainly need sharper localization; others remain difficult even after the search region has been narrowed, which points more directly to repair synthesis and validation as the limiting stage.
 
-For the strong reference model, 120B already solves 70\% of HEAD20 without hints and reaches 100\% with function-level hints. In this regime, hints behave more like context sharpening than like a rescue mechanism.
+For the strong reference model, 120B already solves 70\% of HEAD20 without hints and reaches 100\% with function-level hints. In this regime, hints behave more like context sharpening than like a rescue mechanism. Taken together, these results diagnose only part of the problem: some HEAD tasks are localization-sensitive, but the family-level asymmetry already suggests that localization cannot be the full explanation.
 
-\subsection{Protocol switching alone is not enough on HEAD}
+\subsubsection{Trajectory aggregates indicate failure to converge rather than failure to start}
+
+\begin{table*}[t]
+\centering
+\caption{Compact trajectory aggregates on HEAD20 baseline conditions.}
+\label{tab:trajmain}
+\begin{tabular}{llccccc}
+\toprule
+Model & Protocol & Pass & First edit & First fix & Patch attempts & Test runs \\
+\midrule
+120B & \texttt{act\_only} & 15/20 & 5.3 & 8.7 & 2.9 & 2.5 \\
+120B & \texttt{reflexion} & 16/20 & 5.5 & 9.7 & 2.4 & 2.7 \\
+Mistral & \texttt{act\_only} & 4/20 & 5.2 & 8.2 & 5.4 & 3.4 \\
+Mistral & \texttt{reflexion} & 7/20 & 5.1 & 8.9 & 5.0 & 3.5 \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+Table~\ref{tab:trajmain} shows that weak-model failures on HEAD are not primarily delayed-activation failures. Across baseline conditions, both models begin editing at roughly the same point: the first edit arrives around turn 5 for both Mistral and 120B. The more striking gap appears after editing begins. On \texttt{act\_only}, 120B averages 2.9 patch attempts and 2.5 test runs while solving 15/20 tasks, whereas Mistral averages 5.4 patch attempts and 3.4 test runs while solving only 4/20. The same qualitative gap remains visible for \texttt{reflexion}: Mistral continues to consume more patch attempts and test executions per task than the stronger model, despite similar first-edit timing.
+
+These aggregates imply that HEAD is not mainly a regime where the weak model fails to locate a starting point. Instead, the weak model often reaches an editable region, begins modifying code, and still fails to convert those edits into a correct fix. The cost signature is therefore extended unsuccessful search rather than slow activation. This observation complements the hint study: better localization helps some tasks, but even precise hints do not remove the broader convergence problem.
+
+\subsection{Intervention: trajectory control helps more than plain protocol switching}
+
+\subsubsection{Protocol switching alone is not enough on HEAD}
 
 The matched Mistral rerun compares 12 protocol--strategy conditions on HEAD20. The key takeaway is that the best gains do not come from plain protocol upgrades by themselves. They come from protocol--strategy combinations that reduce the cost of staying on a bad trajectory.
 
@@ -185,29 +213,7 @@ Two observations follow from Table~\ref{tab:protocols}. First, \texttt{act\_only
 
 The broader ranking in Appendix Table~\ref{tab:fullprotocols} reinforces this interpretation. Plain baseline ordering is modestly separated---\texttt{act\_only} at 25\%, \texttt{reflexion} at 30\%, and \texttt{react} at 35\%---but none of these baseline moves is decisive on its own. The strongest conditions are the paired interventions that either cut off unproductive trajectories early (\texttt{early\_stop\_restart}) or allocate budget across multiple independent attempts (\texttt{self\_consistency}). The bottom of the ranking is also informative: \texttt{reflexion + checklist} falls to 20\% despite using the heaviest protocol, which argues against a simple ``more reasoning is better'' interpretation. On this subset, weak-model performance depends more on how the run budget is structured than on protocol label alone.
 
-\subsection{Trajectory aggregates indicate failure to converge rather than failure to start}
-
-\begin{table*}[t]
-\centering
-\caption{Compact trajectory aggregates on HEAD20 baseline conditions.}
-\label{tab:trajmain}
-\begin{tabular}{llccccc}
-\toprule
-Model & Protocol & Pass & First edit & First fix & Patch attempts & Test runs \\
-\midrule
-120B & \texttt{act\_only} & 15/20 & 5.3 & 8.7 & 2.9 & 2.5 \\
-120B & \texttt{reflexion} & 16/20 & 5.5 & 9.7 & 2.4 & 2.7 \\
-Mistral & \texttt{act\_only} & 4/20 & 5.2 & 8.2 & 5.4 & 3.4 \\
-Mistral & \texttt{reflexion} & 7/20 & 5.1 & 8.9 & 5.0 & 3.5 \\
-\bottomrule
-\end{tabular}
-\end{table*}
-
-Table~\ref{tab:trajmain} shows that weak-model failures on HEAD are not primarily delayed-activation failures. Across baseline conditions, both models begin editing at roughly the same point: the first edit arrives around turn 5 for both Mistral and 120B. The more striking gap appears after editing begins. On \texttt{act\_only}, 120B averages 2.9 patch attempts and 2.5 test runs while solving 15/20 tasks, whereas Mistral averages 5.4 patch attempts and 3.4 test runs while solving only 4/20. The same qualitative gap remains visible for \texttt{reflexion}: Mistral continues to consume more patch attempts and test executions per task than the stronger model, despite similar first-edit timing.
-
-These aggregates imply that HEAD is not mainly a regime where the weak model fails to locate a starting point. Instead, the weak model often reaches an editable region, begins modifying code, and still fails to convert those edits into a correct fix. The cost signature is therefore extended unsuccessful search rather than slow activation. This observation is consistent with the hint study: better localization helps some tasks, but even precise hints do not remove the broader convergence problem.
-
-\subsection{Reflexion does not show a stable aggregate edge in the matched ablation}
+\subsubsection{Reflexion does not show a stable aggregate edge in the matched ablation}
 
 We also include a matched Reflexion mechanism ablation on HEAD20. All conditions were rerun in one batch to avoid comparing a new ablation to older baselines.
 
@@ -231,7 +237,7 @@ The ablation does not reproduce a clear aggregate Reflexion-over-ReAct advantage
 
 This is substantively different from saying that Reflexion never helps. The narrower claim supported here is that the observed gains on HEAD20 are better explained by trajectory management than by a stable second-episode rescue mechanism. Appendix Table~\ref{tab:ablationdetail} and its accompanying readouts show the same pattern at slightly finer granularity. If Reflexion helps on this subset, it does so through a more entangled interaction with search control than through a reliable ``fail once, reflect, and recover'' pattern.
 
-\subsection{The HEAD subset transfers to a different model family}
+\subsection{External validation: the HEAD subset transfers to a different model family}
 
 The final main-text result is an independent recheck with \texttt{api-llama-4-scout}. After extending the runner to accept the model's bracketed pseudo-tool-call format, Scout solves only 8/20 tasks under \texttt{act\_only + baseline}.
 
