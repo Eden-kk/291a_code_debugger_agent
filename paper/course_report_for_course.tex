@@ -186,7 +186,7 @@ Table~\ref{tab:trajmain} shows that weak-model failures on HEAD are not primaril
 
 These aggregates imply that HEAD is not mainly a regime where the weak model fails to locate a starting point. Instead, the weak model often reaches an editable region, begins modifying code, and still fails to convert those edits into a correct fix. The cost signature is therefore extended unsuccessful search rather than slow activation. This observation complements the hint study: better localization helps some tasks, but even precise hints do not remove the broader convergence problem.
 
-\subsection{Intervention: trajectory control helps more than plain protocol switching}
+\subsection{Intervention: the strongest gains come from protocol--strategy combinations, not protocol labels alone}
 
 \subsubsection{Protocol switching alone is not enough on HEAD}
 
@@ -209,7 +209,30 @@ Condition & Pass rate & Avg.\ tokens \\
 \end{tabular}
 \end{table}
 
-Two observations follow from Table~\ref{tab:protocols}. First, \texttt{act\_only} baseline is clearly insufficient on HEAD20. Second, the top conditions share a common property: they either restart earlier or diversify attempts. This points to a more general interpretation of HEAD: the weak model often needs help managing trajectory length and error persistence, not just more reasoning tokens.
+\begin{table}[t]
+\centering
+\caption{Improvement over the same-protocol baseline on HEAD20.}
+\label{tab:protocoldelta}
+\begin{tabular}{lcc}
+\toprule
+Protocol / strategy & Pass rate & Delta vs.\ baseline \\
+\midrule
+\texttt{act\_only + baseline} & 5/20 (25\%) & --- \\
+\texttt{act\_only + checklist} & 7/20 (35\%) & +10 points \\
+\texttt{act\_only + early\_stop\_restart} & 7/20 (35\%) & +10 points \\
+\midrule
+\texttt{react + baseline} & 7/20 (35\%) & --- \\
+\texttt{react + self\_consistency} & 8/20 (40\%) & +5 points \\
+\texttt{react + early\_stop\_restart} & 9/20 (45\%) & +10 points \\
+\midrule
+\texttt{reflexion + baseline} & 6/20 (30\%) & --- \\
+\texttt{reflexion + early\_stop\_restart} & 8/20 (40\%) & +10 points \\
+\texttt{reflexion + self\_consistency} & 9/20 (45\%) & +15 points \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Two observations follow from Tables~\ref{tab:protocols} and~\ref{tab:protocoldelta}. First, plain protocol switching is helpful but limited: the baseline progression from \texttt{act\_only} to \texttt{react} to \texttt{reflexion} is only 25\% $\rightarrow$ 35\% $\rightarrow$ 30\%. Second, the largest gains appear only when a protocol is paired with a particular strategy. Within-protocol deltas are consistently larger than the baseline protocol gaps: \texttt{react + early\_stop\_restart} improves over \texttt{react + baseline} by 10 points, and \texttt{reflexion + self\_consistency} improves over \texttt{reflexion + baseline} by 15 points. The evidence therefore supports a narrower claim than the previous heading implied: the best HEAD improvements come from specific protocol--strategy combinations that restructure search, not from protocol labels alone.
 
 The broader ranking in Appendix Table~\ref{tab:fullprotocols} reinforces this interpretation. Plain baseline ordering is modestly separated---\texttt{act\_only} at 25\%, \texttt{reflexion} at 30\%, and \texttt{react} at 35\%---but none of these baseline moves is decisive on its own. The strongest conditions are the paired interventions that either cut off unproductive trajectories early (\texttt{early\_stop\_restart}) or allocate budget across multiple independent attempts (\texttt{self\_consistency}). The bottom of the ranking is also informative: \texttt{reflexion + checklist} falls to 20\% despite using the heaviest protocol, which argues against a simple ``more reasoning is better'' interpretation. On this subset, weak-model performance depends more on how the run budget is structured than on protocol label alone.
 
@@ -233,7 +256,7 @@ Condition & Pass rate & Avg.\ tokens \\
 \end{tabular}
 \end{table}
 
-The ablation does not reproduce a clear aggregate Reflexion-over-ReAct advantage. Reflexion baseline ties ReAct baseline at 8/20, and neither two-episode condition produces an \texttt{Ep1 fail $\rightarrow$ Ep2 pass} rescue. Meanwhile, clean restart without reflection is both weaker and more expensive. The most conservative interpretation is therefore negative: in the current matched batch, Episode 2 is not a demonstrated positive contributor, and clean restart alone is not the source of any gain.
+The ablation does not reproduce a clear aggregate Reflexion-over-ReAct advantage. Reflexion baseline ties ReAct baseline at 8/20, and neither two-episode condition produces an \texttt{Ep1 fail $\rightarrow$ Ep2 pass} rescue. Meanwhile, clean restart without reflection is both weaker and more expensive. The most conservative interpretation is therefore negative: in the current matched batch, Episode 2 is not a demonstrated positive contributor, and naive restart alone is not the source of the gains seen in Table~\ref{tab:protocoldelta}.
 
 This is substantively different from saying that Reflexion never helps. The narrower claim supported here is that the observed gains on HEAD20 are better explained by trajectory management than by a stable second-episode rescue mechanism. Appendix Table~\ref{tab:ablationdetail} and its accompanying readouts show the same pattern at slightly finer granularity. If Reflexion helps on this subset, it does so through a more entangled interaction with search control than through a reliable ``fail once, reflect, and recover'' pattern.
 
