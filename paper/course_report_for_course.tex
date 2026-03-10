@@ -207,7 +207,7 @@ For the strong reference model, 120B already solves 70\% of HEAD20 without hints
 
 \begin{table*}[t]
 \centering
-\caption{Aggregate baseline trajectory metrics on HEAD20.}
+\caption{Aggregate baseline trajectory metrics on HEAD20 from the archived baseline batch. These numbers are diagnostic aggregates and are not intended for direct numerical comparison with the matched rerun or matched ablation tables.}
 \label{tab:trajmain}
 \begin{tabular}{llcccccc}
 \toprule
@@ -225,6 +225,8 @@ Mistral & \texttt{reflexion} & 7/20 & 5.1 & 8.9 & 3.3 & 5.0 & 3.5 \\
 
 Table~\ref{tab:trajmain} reports diagnostic aggregates from the baseline archive, not from the matched rerun batches used later in Section 3.4. It therefore supports process interpretation rather than direct numerical comparison to Tables~\ref{tab:protocols}, \ref{tab:protocoldelta}, and \ref{tab:ablation}. Within that scope, the table shows that weak-model failures on HEAD are not primarily delayed-activation failures. Across all three baseline protocols, both models begin editing at roughly the same point: the first edit arrives around turn 5 for both Mistral and 120B. The more striking gap appears after editing begins. On \texttt{act\_only}, 120B averages 2.9 patch attempts and 2.5 test runs while solving 15/20 tasks, whereas Mistral averages 5.4 patch attempts and 3.4 test runs while solving only 4/20. The same qualitative gap remains visible for \texttt{react} and \texttt{reflexion}: Mistral continues to consume more patch attempts and test executions per task than the stronger model, despite similar first-edit timing.
 
+This distinction matters for reading the later tables. The archived baseline batch in Table~\ref{tab:trajmain} yields Mistral baseline passes of 4/20 for \texttt{act\_only}, 1/20 for \texttt{react}, and 7/20 for \texttt{reflexion}. The matched rerun batch in Tables~\ref{tab:protocols} and~\ref{tab:protocoldelta} yields 5/20, 7/20, and 6/20 for those same baseline labels, while the separate matched ablation batch in Table~\ref{tab:ablation} yields 8/20 for both \texttt{react\_baseline} and \texttt{reflexion\_baseline}. These are distinct reruns under different batch constructions, so they should be interpreted within batch rather than as a single pooled baseline series.
+
 These aggregates imply that HEAD is not mainly a regime where the weak model fails to locate a starting point. Instead, the weak model often reaches an editable region, begins modifying code, and still fails to convert those edits into a correct fix. For the stronger model, the edit-to-fix gap stays in a fairly stable 3.6--4.0 turn band across protocols; the weaker model often reaches the edit phase but rarely turns that progress into a reliable fix, especially under \texttt{react}. The cost signature is therefore extended unsuccessful search rather than slow activation. This observation complements the hint study: better localization helps some tasks, but even precise hints do not remove the broader convergence problem.
 
 \subsection{Intervention: protocol--strategy combinations help by improving convergence, not by adding protocol complexity alone}
@@ -237,7 +239,7 @@ The matched Mistral rerun compares 12 protocol--strategy conditions on HEAD20 in
 
 \begin{table}[t]
 \centering
-\caption{Best-performing matched Mistral conditions on HEAD20.}
+\caption{Best-performing Mistral conditions on HEAD20 from a single matched rerun batch (seed 42, 25-turn, 50k-token budget).}
 \label{tab:protocols}
 \begin{tabular}{lcc}
 \toprule
@@ -254,7 +256,7 @@ Condition & Pass rate & Avg.\ tokens \\
 
 \begin{table}[t]
 \centering
-\caption{Improvement over the same-protocol baseline on HEAD20.}
+\caption{Improvement over the same-protocol baseline within the matched rerun batch.}
 \label{tab:protocoldelta}
 \begin{tabular}{lcc}
 \toprule
@@ -281,11 +283,11 @@ The broader ranking in Appendix Table~\ref{tab:fullprotocols} reinforces this in
 
 \subsubsection{Reflexion does not show a stable aggregate edge in the matched ablation}
 
-We also include a matched Reflexion mechanism ablation on HEAD20. All conditions in Table~\ref{tab:ablation} were rerun in one batch to avoid comparing a new ablation to older baselines. This table is internally comparable, but it is still a separate batch from Tables~\ref{tab:protocols} and~\ref{tab:protocoldelta}.
+We also include a matched Reflexion mechanism ablation on HEAD20. All conditions in Table~\ref{tab:ablation} were rerun in one batch to avoid comparing a new ablation to older baselines. This table is internally comparable, but it is still a separate batch from Tables~\ref{tab:protocols} and~\ref{tab:protocoldelta}. Accordingly, the 8/20 baseline numbers here should be read as ablation-batch baselines rather than as replacements for the 35\% and 30\% matched-rerun baselines above.
 
 \begin{table}[t]
 \centering
-\caption{Reflexion mechanism ablation on HEAD20.}
+\caption{Reflexion mechanism ablation on HEAD20 from a separate matched ablation batch (seed 42, 25-turn, 50k-token budget).}
 \label{tab:ablation}
 \begin{tabular}{lcc}
 \toprule
