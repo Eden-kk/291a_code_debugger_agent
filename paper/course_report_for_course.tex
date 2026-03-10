@@ -80,8 +80,8 @@ Cross-family recheck & HEAD20 & Llama-4-Scout, \texttt{act\_only} baseline & pro
 Experiment family & Scope & Shared settings inside family & Direct comparison policy \\
 \midrule
 Definition batch & 44 annotator-judged human-easy tasks & Mistral \texttt{act\_only}, 5 seeds & compare only the second-layer counts and membership \\
-Baseline archive & HEAD20 hints and trajectory aggregates & archived baseline runs under the same harness & use diagnostically; do not treat as the baseline for matched reruns \\
-Matched protocol batch & HEAD20, 12 protocol--strategy conditions & Mistral, seed 42, 25 turns, 50k tokens & compare conditions within Tables~\ref{tab:protocols} and~\ref{tab:protocoldelta} \\
+Hint-study summary & HEAD20, localization interventions & current hint-study summary artifact & compare hint levels within Table~\ref{tab:hints} \\
+Matched protocol batch & HEAD20, 12 protocol--strategy conditions plus baseline trajectories & Mistral, seed 42, 25 turns, 50k tokens & compare Tables~\ref{tab:trajmain}, \ref{tab:protocols}, and \ref{tab:protocoldelta} within batch \\
 Matched ablation batch & HEAD20, ReAct/Reflexion mechanism study & Mistral, seed 42, 25 turns, 50k tokens & compare conditions within Table~\ref{tab:ablation} only \\
 Scout recheck batch & HEAD20, external model-family check & Scout \texttt{act\_only} baseline, post-fix parser & compare only within the Scout recheck table \\
 \bottomrule
@@ -207,27 +207,22 @@ For the strong reference model, 120B already solves 70\% of HEAD20 without hints
 
 \begin{table*}[t]
 \centering
-\caption{Aggregate baseline trajectory metrics on HEAD20 from the archived baseline batch. These numbers are diagnostic aggregates and are not intended for direct numerical comparison with the matched rerun or matched ablation tables.}
+\caption{Mistral baseline trajectory metrics on HEAD20 within the matched rerun batch.}
 \label{tab:trajmain}
-\begin{tabular}{llcccccc}
+\begin{tabular}{lcccccc}
 \toprule
-Model & Protocol & Pass & First edit & First fix & Edit$\rightarrow$fix gap & Patch attempts & Test runs \\
+Protocol & Pass & First edit & First fix & Edit$\rightarrow$fix gap & Patch attempts & Test runs \\
 \midrule
-120B & \texttt{act\_only} & 15/20 & 5.3 & 8.7 & 3.6 & 2.9 & 2.5 \\
-120B & \texttt{react} & 14/20 & 5.5 & 9.1 & 3.9 & 2.8 & 2.6 \\
-120B & \texttt{reflexion} & 16/20 & 5.5 & 9.7 & 4.0 & 2.4 & 2.7 \\
-Mistral & \texttt{act\_only} & 4/20 & 5.2 & 8.2 & 3.0 & 5.4 & 3.4 \\
-Mistral & \texttt{react} & 1/20 & 5.3 & 8.0 & --- & 4.8 & 3.5 \\
-Mistral & \texttt{reflexion} & 7/20 & 5.1 & 8.9 & 3.3 & 5.0 & 3.5 \\
+\texttt{act\_only} & 5/20 & 5.0 & 8.2 & 2.8 & 4.0 & 4.0 \\
+\texttt{react} & 7/20 & 5.0 & 6.9 & 1.0 & 4.5 & 3.4 \\
+\texttt{reflexion} & 6/20 & 5.2 & 5.7 & 1.0 & 5.1 & 3.4 \\
 \bottomrule
 \end{tabular}
 \end{table*}
 
-Table~\ref{tab:trajmain} reports diagnostic aggregates from the baseline archive, not from the matched rerun batches used later in Section 3.4. It therefore supports process interpretation rather than direct numerical comparison to Tables~\ref{tab:protocols}, \ref{tab:protocoldelta}, and \ref{tab:ablation}. Within that scope, the table shows that weak-model failures on HEAD are not primarily delayed-activation failures. Across all three baseline protocols, both models begin editing at roughly the same point: the first edit arrives around turn 5 for both Mistral and 120B. The more striking gap appears after editing begins. On \texttt{act\_only}, 120B averages 2.9 patch attempts and 2.5 test runs while solving 15/20 tasks, whereas Mistral averages 5.4 patch attempts and 3.4 test runs while solving only 4/20. The same qualitative gap remains visible for \texttt{react} and \texttt{reflexion}: Mistral continues to consume more patch attempts and test executions per task than the stronger model, despite similar first-edit timing.
+Table~\ref{tab:trajmain} is computed from the same matched rerun batch used later in Tables~\ref{tab:protocols} and~\ref{tab:protocoldelta}, so the baseline values are now directly comparable across Section 3.4. All 20 baseline runs in each protocol reach both editing and testing, and the first edit appears at roughly turn 5 regardless of protocol. This makes it difficult to describe HEAD as a failure to begin acting. Instead, the main variation lies in whether those attempts converge: \texttt{act\_only} reaches 5/20, \texttt{react} reaches 7/20, and \texttt{reflexion} reaches 6/20, even though all three protocols are already editing and testing consistently.
 
-This distinction matters for reading the later tables. The archived baseline batch in Table~\ref{tab:trajmain} yields Mistral baseline passes of 4/20 for \texttt{act\_only}, 1/20 for \texttt{react}, and 7/20 for \texttt{reflexion}. The matched rerun batch in Tables~\ref{tab:protocols} and~\ref{tab:protocoldelta} yields 5/20, 7/20, and 6/20 for those same baseline labels, while the separate matched ablation batch in Table~\ref{tab:ablation} yields 8/20 for both \texttt{react\_baseline} and \texttt{reflexion\_baseline}. These are distinct reruns under different batch constructions, so they should be interpreted within batch rather than as a single pooled baseline series.
-
-These aggregates imply that HEAD is not mainly a regime where the weak model fails to locate a starting point. Instead, the weak model often reaches an editable region, begins modifying code, and still fails to convert those edits into a correct fix. For the stronger model, the edit-to-fix gap stays in a fairly stable 3.6--4.0 turn band across protocols; the weaker model often reaches the edit phase but rarely turns that progress into a reliable fix, especially under \texttt{react}. The cost signature is therefore extended unsuccessful search rather than slow activation. This observation complements the hint study: better localization helps some tasks, but even precise hints do not remove the broader convergence problem.
+These aggregates therefore suggest that HEAD is not mainly a regime where the weak model fails to locate a starting point. Instead, the agent often reaches an editable region, begins modifying code, and still fails to convert those attempts into a correct fix. Successful runs that do converge do so relatively soon after the first edit, with average edit-to-fix gaps of 2.8 turns for \texttt{act\_only} and 1.0 turn for both \texttt{react} and \texttt{reflexion}. The more persistent difficulty is converting engagement into correct repairs at the task level. This observation complements the hint study: better localization helps some tasks, but even precise hints do not remove the broader convergence problem.
 
 \subsection{Intervention: protocol--strategy combinations help by improving convergence, not by adding protocol complexity alone}
 
@@ -311,7 +306,7 @@ Taken together, the results support a more specific interpretation of HEAD than 
 
 First, HEAD is best understood as a model-relative regime inside the annotator-judged human-easy region. The first layer of annotation rules out the trivial explanation that these tasks are simply hard for everyone according to the rubric. The second layer then isolates the subset on which a weak model fails consistently under a fixed baseline. The Scout recheck does not change the definition, but it shows that the Mistral-defined subset still transfers non-trivially to another family. This makes HEAD more than a single-model artifact while still keeping the definition operational and narrow.
 
-Second, the experiments suggest that the central difficulty in HEAD is not pure localization failure. The hint study shows that localization information matters, but the gains are highly uneven: QuixBugs improves sharply under stronger hints, while DebugBench and Mini-nightmare remain largely resistant. The trajectory aggregates sharpen this point. In all three baseline protocols, the weak model begins editing at roughly the same time as the stronger model, yet it converts those attempts into correct fixes much less reliably. The most coherent reading is therefore that many HEAD failures arise after the agent has already engaged with the right region, during the process of converging on a correct repair and validating it. This remains an interpretation supported by aggregate evidence, not a direct trajectory-level mechanism proof.
+Second, the experiments suggest that the central difficulty in HEAD is not pure localization failure. The hint study shows that localization information matters, but the gains are highly uneven: QuixBugs improves sharply under stronger hints, while DebugBench and Mini-nightmare remain largely resistant. The trajectory aggregates sharpen this point. In all three baseline protocols of the matched rerun batch, the weak model begins editing at roughly the same time, yet these runs still differ substantially in whether they convert those attempts into correct fixes. The most coherent reading is therefore that many HEAD failures arise after the agent has already engaged with the right region, during the process of converging on a correct repair and validating it. This remains an interpretation supported by aggregate evidence, not a direct trajectory-level mechanism proof.
 
 Third, the intervention results narrow what kinds of help currently appear effective. The matched protocol study does not show a dominant protocol in isolation; the baseline protocol gaps are modest, and Reflexion baseline does not separate from ReAct in the matched ablation. What does stand out is that the strongest gains come from specific protocol--strategy combinations such as \texttt{react + early\_stop\_restart} and \texttt{reflexion + self\_consistency}. At the same time, the ablation rules out an overly simple explanation: adding a second episode or restarting naively is not, by itself, a reliable source of improvement. The practical implication is that HEAD currently behaves more like a search-control problem than a protocol-selection problem. Weak models benefit most when the run is prevented from overcommitting to a single failing trajectory.
 
