@@ -187,7 +187,23 @@ The broader ranking reinforces this interpretation. Plain baseline ordering is m
 
 \subsection{Trajectory aggregates indicate failure to converge rather than failure to start}
 
-Aggregate trajectory statistics reveal that weak-model failures on HEAD are not primarily delayed-activation failures. Across baseline conditions, both models begin editing at roughly the same point: the first edit arrives around turn 5 for both Mistral and 120B. The more striking gap appears after editing begins. On \texttt{act\_only}, 120B averages 2.9 patch attempts and 2.5 test runs while solving 15/20 tasks, whereas Mistral averages 5.4 patch attempts and 3.4 test runs while solving only 4/20. The same qualitative gap remains visible for \texttt{reflexion}: Mistral continues to consume more patch attempts and test executions per task than the stronger model, despite similar first-edit timing.
+\begin{table*}[t]
+\centering
+\caption{Compact trajectory aggregates on HEAD20 baseline conditions.}
+\label{tab:trajmain}
+\begin{tabular}{llccccc}
+\toprule
+Model & Protocol & Pass & First edit & First fix & Patch attempts & Test runs \\
+\midrule
+120B & \texttt{act\_only} & 15/20 & 5.3 & 8.7 & 2.9 & 2.5 \\
+120B & \texttt{reflexion} & 16/20 & 5.5 & 9.7 & 2.4 & 2.7 \\
+Mistral & \texttt{act\_only} & 4/20 & 5.2 & 8.2 & 5.4 & 3.4 \\
+Mistral & \texttt{reflexion} & 7/20 & 5.1 & 8.9 & 5.0 & 3.5 \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+Table~\ref{tab:trajmain} shows that weak-model failures on HEAD are not primarily delayed-activation failures. Across baseline conditions, both models begin editing at roughly the same point: the first edit arrives around turn 5 for both Mistral and 120B. The more striking gap appears after editing begins. On \texttt{act\_only}, 120B averages 2.9 patch attempts and 2.5 test runs while solving 15/20 tasks, whereas Mistral averages 5.4 patch attempts and 3.4 test runs while solving only 4/20. The same qualitative gap remains visible for \texttt{reflexion}: Mistral continues to consume more patch attempts and test executions per task than the stronger model, despite similar first-edit timing.
 
 These aggregates imply that HEAD is not mainly a regime where the weak model fails to locate a starting point. Instead, the weak model often reaches an editable region, begins modifying code, and still fails to convert those edits into a correct fix. The cost signature is therefore extended unsuccessful search rather than slow activation. This observation is consistent with the hint study: better localization helps some tasks, but even precise hints do not remove the broader convergence problem.
 
