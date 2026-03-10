@@ -34,7 +34,7 @@ We study that regime under the name \textbf{HEAD}: \emph{Human-Easy but AI-Diffi
 The contribution is empirical and restrained:
 \begin{enumerate}
     \item a two-layer bug classification that isolates a 20-task canonical HEAD subset from an annotator-judged human-easy slice;
-    \item a hint study showing that localization helps but does not fully explain HEAD;
+    \item an \texttt{act\_only} hint study showing that localization cues have uneven effects and do not fully explain HEAD;
     \item a matched protocol--strategy study showing that trajectory control matters more than plain protocol switching on Mistral HEAD20;
     \item a Reflexion ablation showing no stable aggregate gain over ReAct in the matched batch;
     \item an independent \texttt{Llama-4-Scout} recheck showing that the Mistral-defined subset remains difficult for another model family.
@@ -63,7 +63,7 @@ Layer & Scope & Models / conditions & Purpose \\
 \midrule
 Human-difficulty annotation & 90 tasks & manual rubric & separate annotator-judged human-easy from human-difficult \\
 AI-difficulty definition & 44 annotator-judged human-easy tasks & Mistral Small, \texttt{act\_only}, 5 seeds & define Easy / Intermediate / HEAD \\
-Hint study & HEAD20 & Mistral L0/L2/L4, 120B L0/L2 & test localization sensitivity \\
+Hint study & HEAD20 & Mistral \texttt{act\_only} L0/L2/L4 & test localization sensitivity within the definition protocol \\
 Matched protocol study & HEAD20 & 3 protocols $\times$ 4 strategies, shared budgets & compare trajectory-control interventions \\
 Mechanism ablation & HEAD20 & ReAct / Reflexion matched reruns & test whether Episode 2 drives gains \\
 Cross-family recheck & HEAD20 & Llama-4-Scout, \texttt{act\_only} baseline & probe transfer beyond Mistral \\
@@ -80,7 +80,7 @@ Cross-family recheck & HEAD20 & Llama-4-Scout, \texttt{act\_only} baseline & pro
 Experiment family & Scope & Shared settings inside family & Direct comparison policy \\
 \midrule
 Definition batch & 44 annotator-judged human-easy tasks & Mistral \texttt{act\_only}, 5 seeds & compare only the second-layer counts and membership \\
-Hint-study summary & HEAD20, localization interventions & current hint-study summary artifact & compare hint levels within Table~\ref{tab:hints} \\
+Matched hint batch & HEAD20, localization interventions & Mistral \texttt{act\_only}, seed 42, 25 turns, 50k tokens & compare hint levels within Table~\ref{tab:hints} and Table~\ref{tab:mistralhintfamily} \\
 Matched protocol batch & HEAD20, 12 protocol--strategy conditions plus baseline trajectories & Mistral, seed 42, 25 turns, 50k tokens & compare Tables~\ref{tab:trajmain}, \ref{tab:protocols}, and \ref{tab:protocoldelta} within batch \\
 Matched ablation batch & HEAD20, ReAct/Reflexion mechanism study & Mistral, seed 42, 25 turns, 50k tokens & compare conditions within Table~\ref{tab:ablation} only \\
 Scout recheck batch & HEAD20, external model-family check & Scout \texttt{act\_only} baseline, post-fix parser & compare only within the Scout recheck table \\
@@ -140,7 +140,6 @@ QuixBugs & 9 \\
 The model roles are:
 \begin{itemize}
     \item \textbf{Definition model}: \texttt{api-mistral-small-3.2-2506};
-    \item \textbf{Strong reference}: \texttt{api-gpt-oss-120b} in the hint study;
     \item \textbf{Independent recheck}: \texttt{api-llama-4-scout}.
 \end{itemize}
 
@@ -180,28 +179,26 @@ This recheck does not redefine HEAD; Mistral remains the definition model. It do
 
 \subsection{Diagnosis: HEAD combines localization sensitivity with a convergence bottleneck}
 
-\subsubsection{Hints help, but their benefits are uneven}
+\subsubsection{Hints help unevenly, even within the definition protocol}
 
-The hint study uses \texttt{react} baseline runs with increasing localization information. The full current coverage includes all 20 HEAD tasks for Mistral at levels L0/L2/L4 and for 120B at L0/L2.
+The hint study keeps the definition protocol fixed and varies only localization information inside \texttt{act\_only}. Table~\ref{tab:hints} reports a fresh matched rerun over all 20 HEAD tasks for Mistral at levels L0/L2/L4.
 
 \begin{table}[t]
 \centering
-\caption{Hint response on the canonical HEAD20 subset.}
+\caption{Mistral \texttt{act\_only} hint response on the canonical HEAD20 subset from a separate matched hint batch (seed 42, 25 turns, 50k tokens).}
 \label{tab:hints}
-\begin{tabular}{lcc}
+\begin{tabular}{lc}
 \toprule
-Hint level & Mistral pass & 120B pass \\
+Hint level & Mistral pass \\
 \midrule
-L0 (no hint) & 1/20 (5\%) & 14/20 (70\%) \\
-L2 (function name) & 5/20 (25\%) & 20/20 (100\%) \\
-L4 (line-level hint) & 8/20 (40\%) & --- \\
+L0 (no hint) & 8/20 (40\%) \\
+L2 (function name) & 6/20 (30\%) \\
+L4 (line-level hint) & 9/20 (45\%) \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-Table~\ref{tab:hints} supports two claims. First, localization information clearly matters: Mistral improves from 5\% to 25\% with function-level hints and to 40\% with line-level hints. Second, localization is not the whole story. The Mistral gains are concentrated in QuixBugs, while DebugBench and Mini-nightmare remain mostly unsolved. At the family level, reported in Appendix Table~\ref{tab:mistralhintfamily}, QuixBugs improves from 1/9 to 4/9 to 7/9 as hints become more specific, whereas DebugBench moves only from 0/7 to 1/7 to 1/7 and Mini-nightmare remains at 0/4 throughout. This asymmetry suggests that HEAD is not a single failure type. Some tasks mainly need sharper localization; others remain difficult even after the search region has been narrowed, which points more directly to repair synthesis and validation as the limiting stage.
-
-For the strong reference model, 120B already solves 70\% of HEAD20 without hints and reaches 100\% with function-level hints. In this regime, hints behave more like context sharpening than like a rescue mechanism. Taken together, these results diagnose only part of the problem: some HEAD tasks are localization-sensitive, but the family-level asymmetry already suggests that localization cannot be the full explanation.
+This hint batch is separate from the matched protocol batch used in Tables~\ref{tab:trajmain}, \ref{tab:protocols}, and~\ref{tab:protocoldelta}, so the L0 value here should be read only as the baseline \emph{within the hint batch}, not as a direct replacement for the 5/20 \texttt{act\_only} baseline reported later. Within this batch, the new act-only rerun supports a more qualified claim than the earlier hint summary suggested. Line-level hints help slightly overall, moving Mistral from 40\% at L0 to 45\% at L4, but function-level hints do not produce a stable aggregate gain and in this batch fall to 30\%. The family-level pattern, reported in Appendix Table~\ref{tab:mistralhintfamily}, is even more asymmetric: QuixBugs improves from 5/9 to 6/9 to 8/9 as hints become more specific, whereas DebugBench shifts from 2/7 to 0/7 to 1/7 and Mini-nightmare drops from 1/4 to 0/4 to 0/4. This makes the diagnosis sharper. Localization cues matter for a subset of algorithmic repair tasks, especially QuixBugs, but they do not behave like a uniform rescue mechanism across HEAD20. Even when the search region is narrowed, many tasks remain resistant, which points beyond pure localization to repair synthesis and validation.
 
 \subsubsection{Trajectory aggregates indicate failure to converge rather than failure to start}
 
@@ -222,7 +219,7 @@ Protocol & Pass & First edit & First fix & Edit$\rightarrow$fix gap & Patch atte
 
 Table~\ref{tab:trajmain} is computed from the same matched rerun batch used later in Tables~\ref{tab:protocols} and~\ref{tab:protocoldelta}, so the baseline values are now directly comparable across Section 3.4. All 20 baseline runs in each protocol reach both editing and testing, and the first edit appears at roughly turn 5 regardless of protocol. This makes it difficult to describe HEAD as a failure to begin acting. Instead, the main variation lies in whether those attempts converge: \texttt{act\_only} reaches 5/20, \texttt{react} reaches 7/20, and \texttt{reflexion} reaches 6/20, even though all three protocols are already editing and testing consistently.
 
-These aggregates therefore suggest that HEAD is not mainly a regime where the weak model fails to locate a starting point. Instead, the agent often reaches an editable region, begins modifying code, and still fails to convert those attempts into a correct fix. Successful runs that do converge do so relatively soon after the first edit, with average edit-to-fix gaps of 2.8 turns for \texttt{act\_only} and 1.0 turn for both \texttt{react} and \texttt{reflexion}. The more persistent difficulty is converting engagement into correct repairs at the task level. This observation complements the hint study: better localization helps some tasks, but even precise hints do not remove the broader convergence problem.
+These aggregates therefore suggest that HEAD is not mainly a regime where the weak model fails to locate a starting point. Instead, the agent often reaches an editable region, begins modifying code, and still fails to convert those attempts into a correct fix. Successful runs that do converge do so relatively soon after the first edit, with average edit-to-fix gaps of 2.8 turns for \texttt{act\_only} and 1.0 turn for both \texttt{react} and \texttt{reflexion}. The more persistent difficulty is converting engagement into correct repairs at the task level. This observation complements the new act-only hint study: line-level hints help some QuixBugs tasks, but localization cues alone do not produce a broad recovery across HEAD20.
 
 \subsection{Intervention: protocol--strategy combinations help by improving convergence, not by adding protocol complexity alone}
 
@@ -306,7 +303,7 @@ Taken together, the results support a more specific interpretation of HEAD than 
 
 First, HEAD is best understood as a model-relative regime inside the annotator-judged human-easy region. The first layer of annotation rules out the trivial explanation that these tasks are simply hard for everyone according to the rubric. The second layer then isolates the subset on which a weak model fails consistently under a fixed baseline. The Scout recheck does not change the definition, but it shows that the Mistral-defined subset still transfers non-trivially to another family. This makes HEAD more than a single-model artifact while still keeping the definition operational and narrow.
 
-Second, the experiments suggest that the central difficulty in HEAD is not pure localization failure. The hint study shows that localization information matters, but the gains are highly uneven: QuixBugs improves sharply under stronger hints, while DebugBench and Mini-nightmare remain largely resistant. The trajectory aggregates sharpen this point. In all three baseline protocols of the matched rerun batch, the weak model begins editing at roughly the same time, yet these runs still differ substantially in whether they convert those attempts into correct fixes. The most coherent reading is therefore that many HEAD failures arise after the agent has already engaged with the right region, during the process of converging on a correct repair and validating it. This remains an interpretation supported by aggregate evidence, not a direct trajectory-level mechanism proof.
+Second, the experiments suggest that the central difficulty in HEAD is not pure localization failure. The act-only hint study shows that localization cues matter, but the gains are highly uneven: QuixBugs improves from 5/9 to 8/9 by L4, while DebugBench and Mini-nightmare remain largely resistant and even regress at L2 in this batch. The trajectory aggregates sharpen this point. In all three baseline protocols of the matched rerun batch, the weak model begins editing at roughly the same time, yet these runs still differ substantially in whether they convert those attempts into correct fixes. The most coherent reading is therefore that many HEAD failures arise after the agent has already engaged with the right region, during the process of converging on a correct repair and validating it. This remains an interpretation supported by aggregate evidence, not a direct trajectory-level mechanism proof.
 
 Third, the intervention results narrow what kinds of help currently appear effective. The matched protocol study does not show a dominant protocol in isolation; the baseline protocol gaps are modest, and Reflexion baseline does not separate from ReAct in the matched ablation. What does stand out is that the strongest gains come from specific protocol--strategy combinations such as \texttt{react + early\_stop\_restart} and \texttt{reflexion + self\_consistency}. At the same time, the ablation rules out an overly simple explanation: adding a second episode or restarting naively is not, by itself, a reliable source of improvement. The practical implication is that HEAD currently behaves more like a search-control problem than a protocol-selection problem. Weak models benefit most when the run is prevented from overcommitting to a single failing trajectory.
 
@@ -320,14 +317,13 @@ The paper has five main limitations.
     \item The canonical HEAD definition is tied to one weak model family and one protocol baseline.
     \item Some results, especially the Scout recheck, are currently single-seed.
     \item The current evidence is mostly aggregate; it shows \emph{that} HEAD exists, but not yet a full trajectory-level account of \emph{why} each subtype fails.
-    \item Strong-model evidence is narrower than the weak-model evidence and is mostly visible through the hint study.
 \end{itemize}
 
 The most valuable next steps are multi-seed cross-model validation, subtype-level analysis inside HEAD20, and manual trajectory annotation that distinguishes localization, repair, and search-control failures.
 
 \section{Conclusion}
 
-Within the scope of this study, HEAD is already a useful empirical object. A two-layer definition isolates a 20-task subset of annotator-judged human-easy bugs that remain difficult for a weak debugging agent. The human-difficulty layer makes explicit that these are not generic hard tasks under the annotation rubric: they are tasks whose fixes remain locally legible to a programmer, yet still frustrate the agent. Hint experiments show that localization helps but does not eliminate the phenomenon. Matched reruns show that the best improvements come from controlling bad trajectories rather than simply changing protocol names. Reflexion ablations weaken the claim that Episode 2 is a stable source of improvement. Finally, a Scout recheck shows that the subset remains difficult for an independent model family.
+Within the scope of this study, HEAD is already a useful empirical object. A two-layer definition isolates a 20-task subset of annotator-judged human-easy bugs that remain difficult for a weak debugging agent. The human-difficulty layer makes explicit that these are not generic hard tasks under the annotation rubric: they are tasks whose fixes remain locally legible to a programmer, yet still frustrate the agent. Act-only hint experiments show that localization cues help unevenly and do not eliminate the phenomenon. Matched reruns show that the best improvements come from controlling bad trajectories rather than simply changing protocol names. Reflexion ablations weaken the claim that Episode 2 is a stable source of improvement. Finally, a Scout recheck shows that the subset remains difficult for an independent model family.
 
 \appendix
 
@@ -356,20 +352,20 @@ This definition is narrow on purpose. It is intended to produce a stable high-pr
 
 \begin{table}[h]
 \centering
-\caption{Family-level Mistral hint response on HEAD20 under \texttt{react} baseline.}
+\caption{Family-level Mistral hint response on HEAD20 under \texttt{act\_only}.}
 \label{tab:mistralhintfamily}
 \begin{tabular}{lccc}
 \toprule
 Family & L0 & L2 & L4 \\
 \midrule
-DebugBench & 0/7 & 1/7 & 1/7 \\
-Mini-nightmare & 0/4 & 0/4 & 0/4 \\
-QuixBugs & 1/9 & 4/9 & 7/9 \\
+DebugBench & 2/7 & 0/7 & 1/7 \\
+Mini-nightmare & 1/4 & 0/4 & 0/4 \\
+QuixBugs & 5/9 & 6/9 & 8/9 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-Line-level hints mainly improve QuixBugs. DebugBench and Mini-nightmare remain largely unsolved even after the search region is narrowed.
+Line-level hints mainly improve QuixBugs. DebugBench and Mini-nightmare remain largely resistant, and the function-level condition is weaker than the no-hint baseline in this matched rerun.
 
 \section{Matched Mistral Protocol--Strategy Table}
 

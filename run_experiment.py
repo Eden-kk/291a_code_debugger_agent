@@ -31,7 +31,7 @@ from collections import defaultdict
 try:
     from agent.runner import AgentRunner
     from agent.telemetry import save_result
-except (OSError, TimeoutError):
+except (ModuleNotFoundError, OSError, TimeoutError):
     from agent_local.runner import AgentRunner
     from agent_local.telemetry import save_result
 
