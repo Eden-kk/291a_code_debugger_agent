@@ -225,13 +225,13 @@ Protocol & Pass & First edit & First fix & Edit$\rightarrow$fix gap & Patch atte
 \end{tabular}
 \end{table*}
 
-Table~\ref{tab:trajmain} is computed from the same matched rerun batch used later in Tables~\ref{tab:protocols} and~\ref{tab:protocoldelta}, so the baseline values are now directly comparable across Section 3.4. All 20 baseline runs in each protocol reach both editing and testing, and the first edit appears at roughly turn 5 regardless of protocol. This makes it difficult to describe HEAD as a failure to begin acting. Instead, the main variation lies in whether those attempts converge: \texttt{act\_only} reaches 5/20, \texttt{react} reaches 7/20, and \texttt{reflexion} reaches 6/20, even though all three protocols are already editing and testing consistently.
+Table~\ref{tab:trajmain} is computed from the same matched rerun batch used later in Tables~\ref{tab:protocols} and~\ref{tab:protocoldelta}, so the baseline values are now directly comparable across Section 3.4. All 20 baseline runs in each protocol reach both editing and testing, and the first edit appears at roughly turn 5 regardless of protocol. The columns are not all averaged over the same subset: \textit{First edit} is averaged over all 20 runs in a protocol, while \textit{First fix} and \textit{Edit$\rightarrow$fix gap} are averaged only over successful runs. This makes it difficult to describe HEAD as a failure to begin acting. Instead, the main variation lies in whether those attempts converge: \texttt{act\_only} reaches 5/20, \texttt{react} reaches 7/20, and \texttt{reflexion} reaches 6/20, even though all three protocols are already editing and testing consistently.
 
 These aggregates therefore suggest that HEAD is not mainly a regime where the weak model fails to locate a starting point. Instead, the agent often reaches an editable region, begins modifying code, and still fails to convert those attempts into a correct fix. Successful runs that do converge do so relatively soon after the first edit, with average edit-to-fix gaps of 2.8 turns for \texttt{act\_only} and 1.0 turn for both \texttt{react} and \texttt{reflexion}. The more persistent difficulty is converting engagement into correct repairs at the task level. This observation complements the act-only hint reruns: even when line-level hints help on some QuixBugs tasks, localization cues alone do not produce a stable broad recovery across HEAD20 for the weak model.
 
 \subsection{Intervention: protocol--strategy combinations help by improving convergence, not by adding protocol complexity alone}
 
-Section 3.2 showed that HEAD is not well described as a failure to begin acting. The weak model usually reaches an editable region and starts making changes, but then fails to convert those attempts into a correct fix. The next question is therefore not simply which protocol is ``stronger,'' but which intervention most effectively improves convergence once a run is already underway. The evidence in this section points to a consistent answer: the best gains come from protocol--strategy combinations that restructure how search unfolds, especially by shortening unproductive trajectories or redistributing budget across independent attempts.
+Section 3.3.2 showed that HEAD is not well described as a failure to begin acting. The weak model usually reaches an editable region and starts making changes, but then fails to convert those attempts into a correct fix. The next question is therefore not simply which protocol is ``stronger,'' but which intervention most effectively improves convergence once a run is already underway. The evidence in this section points to a consistent answer: the best gains come from protocol--strategy combinations that restructure how search unfolds, especially by shortening unproductive trajectories or redistributing budget across independent attempts.
 
 \subsubsection{Protocol switching alone is not enough on HEAD}
 
@@ -319,7 +319,7 @@ These conclusions remain intentionally bounded. The present evidence is sufficie
 
 \section{Limitations and Future Work}
 
-The paper has five main limitations.
+The paper has four main limitations.
 \begin{itemize}
     \item The first layer is annotation-based rather than a direct human-subject study, so ``human-easy'' should be read as a rubric-derived label rather than as measured human repair performance.
     \item The canonical HEAD definition is tied to one weak model family and one protocol baseline.
