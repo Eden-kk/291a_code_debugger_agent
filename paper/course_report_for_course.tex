@@ -131,13 +131,33 @@ The main protocol families are \texttt{act\_only}, \texttt{react}, and \texttt{r
 
 \section{Main Results}
 
-The results are organized as a progression rather than as a flat list. We first establish that HEAD is a real slice inside the human-easy region. We then ask what kind of difficulty this slice reflects, using hints and trajectory aggregates as diagnosis tools. Next, we test which interventions help on the slice once it has been isolated. Finally, we ask whether the resulting subset remains difficult for a different model family.
+The results are organized as a progression rather than as a flat list. We first establish that HEAD is a real slice inside the human-easy region and then strengthen that definition with an external recheck on a different model family. We next ask what kind of difficulty this slice reflects, using hints and trajectory aggregates as diagnosis tools. Finally, we test which interventions help once the slice has been isolated.
 
 \subsection{Existence: HEAD forms a real left tail inside human-easy tasks}
 
 Table~\ref{tab:classification} shows the first main result: human-easy does not imply agent-easy. Among 44 tasks judged easy for humans, only 16 are easy for the Mistral baseline, 8 lie in an intermediate band, and 20 fall into the HEAD subset. This means nearly half of the human-easy slice still looks difficult to the weak agent under the canonical setup.
 
 This result is important because it separates HEAD from generic benchmark hardness. HEAD is not built from human-difficult tasks. It is the left tail \emph{inside} the human-easy region. Table~\ref{tab:headcomposition} further shows that the canonical subset is not tied to a single benchmark source: it contains 7 DebugBench tasks, 4 Mini-nightmare tasks, and 9 QuixBugs tasks. The phenomenon therefore survives across both algorithmic repair tasks and compact debugging tasks with more open-ended execution traces.
+
+The definition itself is Mistral-relative, so it is important to ask whether the resulting subset is still difficult for another model family. We therefore run an independent recheck with \texttt{api-llama-4-scout}. After extending the runner to accept the model's bracketed pseudo-tool-call format, Scout solves only 8/20 tasks under \texttt{act\_only + baseline}.
+
+\begin{table}[t]
+\centering
+\caption{Independent Llama-4-Scout recheck on HEAD20.}
+\label{tab:scout}
+\begin{tabular}{lcc}
+\toprule
+Family & Pass rate & Avg.\ tokens \\
+\midrule
+Overall & 8/20 (40.0\%) & 36{,}260 \\
+DebugBench & 3/7 (42.9\%) & 35{,}038 \\
+Mini-nightmare & 0/4 (0.0\%) & 53{,}540 \\
+QuixBugs & 5/9 (55.6\%) & 29{,}531 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+This recheck does not redefine HEAD; Mistral remains the definition model. It does, however, strengthen the interpretation of HEAD as a model-relative regime rather than a one-model accident. In particular, the complete failure on Mini-nightmare suggests that the hardest part of HEAD20 is not just an artifact of one model API or one prompt family. The task-level list in the appendix is consistent with the family totals in Table~\ref{tab:scout}: five of the eight Scout successes come from QuixBugs, three come from DebugBench, and none come from Mini-nightmare.
 
 \subsection{Diagnosis: HEAD combines localization sensitivity with a convergence bottleneck}
 
@@ -264,33 +284,11 @@ The ablation does not reproduce a clear aggregate Reflexion-over-ReAct advantage
 
 This is substantively different from saying that Reflexion never helps. The narrower claim supported here is that the observed gains on HEAD20 are better explained by convergence management than by a stable second-episode rescue mechanism. Appendix Table~\ref{tab:ablationdetail} and its accompanying readouts show the same pattern at slightly finer granularity: no Episode-2 rescues are observed, and \texttt{restart\_without\_reflection} drops to 25\% while consuming the most tokens. The evidence therefore supports a specific reading of Section 3.3 as a whole. On HEAD, the useful interventions are not simply those that add another reasoning stage; they are the ones that prevent the agent from spending too much of its budget on a single failing trajectory.
 
-\subsection{External validation: the HEAD subset transfers to a different model family}
-
-The final main-text result is an independent recheck with \texttt{api-llama-4-scout}. After extending the runner to accept the model's bracketed pseudo-tool-call format, Scout solves only 8/20 tasks under \texttt{act\_only + baseline}.
-
-\begin{table}[t]
-\centering
-\caption{Independent Llama-4-Scout recheck on HEAD20.}
-\label{tab:scout}
-\begin{tabular}{lcc}
-\toprule
-Family & Pass rate & Avg.\ tokens \\
-\midrule
-Overall & 8/20 (40.0\%) & 36{,}260 \\
-DebugBench & 3/7 (42.9\%) & 35{,}038 \\
-Mini-nightmare & 0/4 (0.0\%) & 53{,}540 \\
-QuixBugs & 5/9 (55.6\%) & 29{,}531 \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-This is not a redefinition of HEAD; Mistral remains the definition model. Instead, Scout acts as an external check on whether the same subset is still difficult for another family. The answer is yes. In particular, the complete failure on Mini-nightmare suggests that the hardest part of HEAD20 is not just an artifact of one model API or one prompt family. The task-level list in the appendix is consistent with the family totals in Table~\ref{tab:scout}: five of the eight Scout successes come from QuixBugs, three come from DebugBench, and none come from Mini-nightmare.
-
 \section{Discussion}
 
 Taken together, these experiments support a restrained but coherent story.
 
-First, HEAD is a meaningful category inside human-easy tasks rather than a relabeling of benchmark-hard cases. Second, localization matters, but only up to a point: line-level hints substantially help some tasks, especially QuixBugs, while other tasks remain hard even when the search area is narrowed. Third, the trajectory aggregates suggest that many weak-model failures occur after editing has already started, which makes failure to converge a better description than failure to engage. Fourth, the best weak-model gains come from managing search trajectories rather than simply switching to a heavier protocol. Fifth, the Mistral-defined subset survives a first independent recheck with Scout, which makes the category more plausible as a model-relative regime rather than a one-model accident.
+First, HEAD is a meaningful category inside human-easy tasks rather than a relabeling of benchmark-hard cases. Second, the Mistral-defined subset also remains difficult for Scout, which strengthens the interpretation of HEAD as a model-relative regime rather than a one-model accident. Third, localization matters, but only up to a point: line-level hints substantially help some tasks, especially QuixBugs, while other tasks remain hard even when the search area is narrowed. Fourth, the trajectory aggregates suggest that many weak-model failures occur after editing has already started, which makes failure to converge a better description than failure to engage. Fifth, the best weak-model gains come from managing search trajectories rather than simply switching to a heavier protocol.
 
 This paper intentionally stops short of stronger claims about failure mechanisms. More detailed trajectory annotation, subtype taxonomy, and broader multi-seed cross-model stability analysis are left for follow-up work.
 
@@ -452,7 +450,7 @@ Mistral & \texttt{reflexion} & 7/20 & 5.1 & 8.9 & 3.3 & 5.0 & 3.5 \\
 \end{tabular}
 \end{table*}
 
-The weak model often starts editing at roughly the same point as the strong model, but consumes more patch attempts and test runs while converting fewer runs into correct fixes. The aggregate pattern is therefore consistent with the main-text interpretation that HEAD failures are dominated more by unsuccessful post-edit search than by inability to begin acting.
+The weak model often starts editing at roughly the same point as the strong model, but consumes more patch attempts and test runs while converting fewer runs into correct fixes. The aggregate pattern is therefore consistent with the interpretation that HEAD failures are dominated more by unsuccessful post-edit search than by inability to begin acting.
 
 \bibliographystyle{plainnat}
 \bibliography{references}
