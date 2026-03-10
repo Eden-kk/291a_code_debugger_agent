@@ -218,17 +218,6 @@ Within the scope of this study, HEAD is already a useful empirical object. A two
 
 \appendix
 
-\section{Appendix Overview}
-
-This appendix collects experiment details that support the main text. In particular, it includes:
-\begin{itemize}
-    \item the matched Mistral protocol--strategy rerun;
-    \item the matched Reflexion mechanism ablation;
-    \item the single-seed post-fix Scout recheck.
-\end{itemize}
-
-It does \emph{not} include later exploratory analyses such as broader multi-seed model sweeps, subtype taxonomy, or manual trajectory annotation.
-
 \section{Two-Layer Definition Details}
 
 The canonical HEAD definition uses five-seed Mistral Small \texttt{act\_only} performance inside the \texttt{human-easy} slice. The thresholds are repeated here for completeness.
@@ -252,8 +241,6 @@ This definition is narrow on purpose. It is intended to produce a stable high-pr
 
 \section{Hint Study Details}
 
-The main text reports the overall dose-response effect. Here we add the corresponding family-level breakdown.
-
 \begin{table}[h]
 \centering
 \caption{Family-level Mistral hint response on HEAD20 under \texttt{react} baseline.}
@@ -269,11 +256,9 @@ QuixBugs & 1/9 & 4/9 & 7/9 \\
 \end{tabular}
 \end{table}
 
-This table makes the central asymmetry visible. The gain from line-level hints is real, but it is concentrated almost entirely in QuixBugs. That is why the main text interprets localization as helpful but incomplete: the problems that remain on DebugBench and Mini-nightmare are not resolved simply by pointing the model at the right function or line.
+Line-level hints mainly improve QuixBugs. DebugBench and Mini-nightmare remain largely unsolved even after the search region is narrowed.
 
 \section{Matched Mistral Protocol--Strategy Table}
-
-The main text only shows the top conditions. Table~\ref{tab:fullprotocols} records all twelve matched protocol--strategy settings.
 
 \begin{table*}[t]
 \centering
@@ -303,8 +288,6 @@ Mini-nightmare is omitted from the last two columns because it is almost entirel
 
 \section{Reflexion Mechanism Details}
 
-The ablation contains both aggregate pass rates and task-level swaps. The core ablation numbers are repeated in Table~\ref{tab:ablationdetail}, followed by the most informative readouts.
-
 \begin{table}[h]
 \centering
 \caption{Detailed Reflexion mechanism ablation.}
@@ -321,7 +304,7 @@ Condition & Pass & Avg.\ tokens \\
 \end{tabular}
 \end{table}
 
-Additional mechanism readouts:
+Additional readouts:
 \begin{itemize}
     \item Episode-1 pass rate: 7/20 (35\%).
     \item Episode-2 rescues in baseline: 0.
@@ -331,11 +314,9 @@ Additional mechanism readouts:
     \item ReAct success but baseline fail: 1 task.
 \end{itemize}
 
-These details support the conservative reading used in the main text: the matched ablation does not justify a strong claim that Reflexion's second episode is the main driver of gains on HEAD20.
+No matched condition in this ablation shows a stable Episode-2 rescue effect.
 
 \section{Independent Scout Recheck Details}
-
-The post-fix Scout recheck is important because the initial Scout calibration was unusable before tool-call compatibility was fixed. The valid recheck therefore has two parts: a compatibility note and a performance summary.
 
 \subsection{Compatibility Note}
 
@@ -355,11 +336,9 @@ The eight successful Scout tasks are:
     \item \texttt{quixbugs\_wrap}
 \end{itemize}
 
-The most important family-level failure is Mini-nightmare: Scout solves 0/4 tasks there even after the tool-call fix. This is why the Scout result is informative despite being single-seed.
+Scout solves 0/4 Mini-nightmare tasks even after the tool-call fix.
 
-\section{Trajectory Aggregate Metrics Already Present in the Repository}
-
-Although this report does not include manual trajectory annotation, it does include aggregated edit/test trajectory metrics. These metrics are descriptive rather than causal, but they are useful as an appendix record.
+\section{Trajectory Aggregate Metrics}
 
 \begin{table*}[t]
 \centering
@@ -379,11 +358,7 @@ Mistral & \texttt{reflexion} & 7/20 & 5.1 & 8.9 & 3.3 & 5.0 & 3.5 \\
 \end{tabular}
 \end{table*}
 
-These numbers support treating HEAD as more than a pure localization problem. The weak model often starts editing at roughly the same point as the strong model, but consumes more patch attempts and test runs while converting fewer runs into correct fixes.
-
-\section{Appendix Summary}
-
-The appendix expands the main text in four directions: the full second-layer definition, family-level hint response, the complete matched protocol--strategy table, and detailed Reflexion/Scout readouts. Together with the aggregate trajectory table, these additions make the report self-contained without changing the main claims.
+The weak model often starts editing at roughly the same point as the strong model, but consumes more patch attempts and test runs while converting fewer runs into correct fixes.
 
 \bibliographystyle{plainnat}
 \bibliography{references}
