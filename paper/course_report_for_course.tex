@@ -12,6 +12,7 @@
 \usepackage{microtype}
 \usepackage{xcolor}
 \usepackage{graphicx}
+\usepackage{array}
 
 \title{HEAD Bugs: Annotator-Judged Human-Easy but AI-Difficult Debugging Tasks}
 
@@ -57,35 +58,39 @@ The experiments use a single local debugging-agent setup across all reported con
 \centering
 \caption{Experimental design summarized by role rather than by chronological run order.}
 \label{tab:design}
-\begin{tabular}{llll}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.18\textwidth}>{\raggedright\arraybackslash}p{0.18\textwidth}>{\raggedright\arraybackslash}p{0.33\textwidth}>{\raggedright\arraybackslash}p{0.21\textwidth}}
 \toprule
 Layer & Scope & Models / conditions & Purpose \\
 \midrule
 Human-difficulty annotation & 90 tasks & manual rubric & separate annotator-judged human-easy from human-difficult \\
-AI-difficulty definition & 44 annotator-judged human-easy tasks & Mistral Small, \texttt{act\_only}, 5 seeds & define Easy / Intermediate / HEAD \\
-Hint study & HEAD20 & two Mistral \texttt{act\_only} reruns and one 120B \texttt{act\_only} rerun at L0/L2/L4 & test localization sensitivity within the definition protocol \\
-Matched protocol study & HEAD20 & 3 protocols $\times$ 4 strategies, shared budgets & compare trajectory-control interventions \\
-Mechanism ablation & HEAD20 & ReAct / Reflexion matched reruns & test whether Episode 2 drives gains \\
-Cross-family recheck & HEAD20 & Llama-4-Scout, \texttt{act\_only} baseline & probe transfer beyond Mistral \\
+AI-difficulty definition & 44 annotator-judged human-easy tasks & Mistral Small,\newline \texttt{act\_only}, 5 seeds & define Easy / Intermediate / HEAD \\
+Hint study & HEAD20 & two Mistral \texttt{act\_only} reruns\newline and one 120B \texttt{act\_only} rerun at L0/L2/L4 & test localization sensitivity within the definition protocol \\
+Matched protocol study & HEAD20 & 3 protocols $\times$ 4 strategies,\newline shared budgets & compare trajectory-control interventions \\
+Mechanism ablation & HEAD20 & ReAct / Reflexion\newline matched reruns & test whether Episode 2 drives gains \\
+Cross-family recheck & HEAD20 & Llama-4-Scout,\newline \texttt{act\_only} baseline & probe transfer beyond Mistral \\
 \bottomrule
 \end{tabular}
+}
 \end{table*}
 
 \begin{table*}[t]
 \centering
 \caption{Comparability of the reported experiment families. Numerical comparisons are intended only within the directly comparable groups.}
 \label{tab:comparability}
-\begin{tabular}{llll}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.18\textwidth}>{\raggedright\arraybackslash}p{0.19\textwidth}>{\raggedright\arraybackslash}p{0.26\textwidth}>{\raggedright\arraybackslash}p{0.27\textwidth}}
 \toprule
 Experiment family & Scope & Shared settings inside family & Direct comparison policy \\
 \midrule
-Definition batch & 44 annotator-judged human-easy tasks & Mistral \texttt{act\_only}, 5 seeds & compare only the second-layer counts and membership \\
-Hint reruns & HEAD20, localization interventions & independent \texttt{act\_only} reruns, seed 42, 25 turns, 50k tokens & compare hint levels within a rerun; compare reruns qualitatively \\
-Matched protocol batch & HEAD20, 12 protocol--strategy conditions plus baseline trajectories & Mistral, seed 42, 25 turns, 50k tokens & compare Tables~\ref{tab:trajmain}, \ref{tab:protocols}, and \ref{tab:protocoldelta} within batch \\
-Matched ablation batch & HEAD20, ReAct/Reflexion mechanism study & Mistral, seed 42, 25 turns, 50k tokens & compare conditions within Table~\ref{tab:ablation} only \\
-Scout recheck batch & HEAD20, external model-family check & Scout \texttt{act\_only} baseline, post-fix parser & compare only within the Scout recheck table \\
+Definition batch & 44 annotator-judged human-easy tasks & Mistral \texttt{act\_only},\newline 5 seeds & compare only the second-layer counts and membership \\
+Hint reruns & HEAD20, localization interventions & independent \texttt{act\_only} reruns,\newline seed 42, 25 turns, 50k tokens & compare hint levels within a rerun;\newline compare reruns qualitatively \\
+Matched protocol batch & HEAD20, 12 protocol--strategy conditions plus baseline trajectories & Mistral,\newline seed 42, 25 turns, 50k tokens & compare Tables~\ref{tab:trajmain}, \ref{tab:protocols},\newline and \ref{tab:protocoldelta} within batch \\
+Matched ablation batch & HEAD20, ReAct/Reflexion mechanism study & Mistral,\newline seed 42, 25 turns, 50k tokens & compare conditions within Table~\ref{tab:ablation} only \\
+Scout recheck batch & HEAD20, external model-family check & Scout \texttt{act\_only} baseline,\newline post-fix parser & compare only within the Scout recheck table \\
 \bottomrule
 \end{tabular}
+}
 \end{table*}
 
 \subsection{Two-Layer Difficulty Definition}
@@ -182,7 +187,7 @@ This recheck does not redefine HEAD; Mistral remains the definition model. It do
 
 \subsubsection{Hints help unevenly, even within the definition protocol}
 
-The hint study keeps the definition protocol fixed and varies only localization information inside \texttt{act\_only}. Table~\ref{tab:hints} reports two complete Mistral reruns and one complete 120B rerun over all 20 HEAD tasks at levels L0/L2/L4.
+The hint study keeps the definition protocol fixed and varies only localization information inside \texttt{act\_only}. Table~\ref{tab:hints} reports two complete Mistral reruns and one complete 120B run over all 20 HEAD tasks at levels L0/L2/L4.
 
 \begin{table}[t]
 \centering
@@ -190,7 +195,7 @@ The hint study keeps the definition protocol fixed and varies only localization 
 \label{tab:hints}
 \begin{tabular}{lccc}
 \toprule
-Hint level & Mistral rerun 1 & Mistral rerun 2 & 120B rerun 2 \\
+Hint level & Mistral rerun 1 & Mistral rerun 2 & 120B \\
 \midrule
 L0 (no hint) & 8/20 (40\%) & 5/20 (25\%) & 19/20 (95\%) \\
 L2 (function name) & 6/20 (30\%) & 6/20 (30\%) & 18/20 (90\%) \\
