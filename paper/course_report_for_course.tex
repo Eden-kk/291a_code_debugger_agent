@@ -139,6 +139,8 @@ Table~\ref{tab:classification} shows the first main result: human-easy does not 
 
 This result is important because it separates HEAD from generic benchmark hardness. HEAD is not built from human-difficult tasks. It is the left tail \emph{inside} the human-easy region. Table~\ref{tab:headcomposition} further shows that the canonical subset is not tied to a single benchmark source: it contains 7 DebugBench tasks, 4 Mini-nightmare tasks, and 9 QuixBugs tasks. The phenomenon therefore survives across both algorithmic repair tasks and compact debugging tasks with more open-ended execution traces.
 
+\subsection{External recheck: the Mistral-defined subset remains difficult for Scout}
+
 The definition itself is Mistral-relative, so it is important to ask whether the resulting subset is still difficult for another model family. We therefore run an independent recheck with \texttt{api-llama-4-scout}. After extending the runner to accept the model's bracketed pseudo-tool-call format, Scout solves only 8/20 tasks under \texttt{act\_only + baseline}.
 
 \begin{table}[t]
