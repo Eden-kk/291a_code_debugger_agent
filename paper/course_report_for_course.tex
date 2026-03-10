@@ -13,6 +13,7 @@
 \usepackage{xcolor}
 \usepackage{graphicx}
 \usepackage{array}
+\usepackage{float}
 
 \title{HEAD Bugs: Annotator-Judged Human-Easy but AI-Difficult Debugging Tasks}
 
@@ -345,6 +346,10 @@ The next steps are multi-seed cross-model validation, subtype-level analysis ins
 This study isolates a 20-task subset of annotator-judged human-easy bugs that remains difficult for a weak debugging agent under a fixed baseline. The evidence supports three claims: the subset is a real left tail inside the annotated human-easy slice, its difficulty transfers non-trivially to Scout, and its failures are better explained by uneven localization sensitivity plus post-edit convergence problems than by failure to start. The strongest improvements come from protocol--strategy combinations that manage bad trajectories rather than from protocol complexity alone.
 
 \clearpage
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+\clearpage
 \appendix
 \section*{Appendix}
 
@@ -352,7 +357,7 @@ This study isolates a 20-task subset of annotator-judged human-easy bugs that re
 
 The canonical HEAD definition uses five-seed Mistral Small \texttt{act\_only} performance inside the \texttt{human-easy} slice. The thresholds are repeated here for completeness.
 
-\begin{table}[h]
+\begin{table}[H]
 \centering
 \caption{Operational definition of the second-layer categories inside \texttt{human-easy}.}
 \label{tab:defdetails}
@@ -371,7 +376,7 @@ This definition is narrow on purpose. It is intended to produce a stable high-pr
 
 \section{Hint Study Details}
 
-\begin{table}[h]
+\begin{table}[H]
 \centering
 \caption{Family-level Mistral hint response on HEAD20 under \texttt{act\_only} (run).}
 \label{tab:mistralhintfamilyrun}
@@ -386,7 +391,7 @@ QuixBugs & 5/9 & 6/9 & 8/9 \\
 \end{tabular}
 \end{table}
 
-\begin{table}[h]
+\begin{table}[H]
 \centering
 \caption{Family-level Mistral hint response on HEAD20 under \texttt{act\_only} (rerun).}
 \label{tab:mistralhintfamilyrerun}
@@ -401,7 +406,7 @@ QuixBugs & 5/9 & 6/9 & 6/9 \\
 \end{tabular}
 \end{table}
 
-\begin{table}[h]
+\begin{table}[H]
 \centering
 \caption{Family-level 120B hint response on HEAD20 under \texttt{act\_only}.}
 \label{tab:120bhintfamilyr2}
@@ -420,7 +425,7 @@ Across the Mistral run and rerun, QuixBugs remains the only family with consiste
 
 \section{Matched Mistral Protocol--Strategy Table}
 
-\begin{table*}[t]
+\begin{table*}[H]
 \centering
 \caption{Full matched Mistral protocol--strategy ranking on HEAD20.}
 \label{tab:fullprotocols}
@@ -448,7 +453,7 @@ Mini-nightmare is omitted from the last two columns because it is almost entirel
 
 \section{Reflexion Mechanism Details}
 
-\begin{table}[h]
+\begin{table}[H]
 \centering
 \caption{Detailed Reflexion mechanism ablation.}
 \label{tab:ablationdetail}
@@ -497,8 +502,5 @@ The eight successful Scout tasks are:
 \end{itemize}
 
 Scout solves 0/4 Mini-nightmare tasks even after the tool-call fix.
-
-\bibliographystyle{plainnat}
-\bibliography{references}
 
 \end{document}
