@@ -156,7 +156,7 @@ L4 (line-level hint) & 8/20 (40\%) & --- \\
 \end{tabular}
 \end{table}
 
-Table~\ref{tab:hints} supports two claims. First, localization information clearly matters: Mistral improves from 5\% to 25\% with function-level hints and to 40\% with line-level hints. Second, localization is not the whole story. The Mistral gains are concentrated in QuixBugs, while DebugBench and Mini-nightmare remain mostly unsolved. At the family level, QuixBugs improves from 1/9 to 4/9 to 7/9 as hints become more specific, whereas DebugBench moves only from 0/7 to 1/7 to 1/7 and Mini-nightmare remains at 0/4 throughout. This asymmetry suggests that HEAD is not a single failure type. Some tasks mainly need sharper localization; others remain difficult even after the search region has been narrowed, which points more directly to repair synthesis and validation as the limiting stage.
+Table~\ref{tab:hints} supports two claims. First, localization information clearly matters: Mistral improves from 5\% to 25\% with function-level hints and to 40\% with line-level hints. Second, localization is not the whole story. The Mistral gains are concentrated in QuixBugs, while DebugBench and Mini-nightmare remain mostly unsolved. At the family level, reported in Appendix Table~\ref{tab:mistralhintfamily}, QuixBugs improves from 1/9 to 4/9 to 7/9 as hints become more specific, whereas DebugBench moves only from 0/7 to 1/7 to 1/7 and Mini-nightmare remains at 0/4 throughout. This asymmetry suggests that HEAD is not a single failure type. Some tasks mainly need sharper localization; others remain difficult even after the search region has been narrowed, which points more directly to repair synthesis and validation as the limiting stage.
 
 For the strong reference model, 120B already solves 70\% of HEAD20 without hints and reaches 100\% with function-level hints. In this regime, hints behave more like context sharpening than like a rescue mechanism.
 
@@ -183,7 +183,7 @@ Condition & Pass rate & Avg.\ tokens \\
 
 Two observations follow from Table~\ref{tab:protocols}. First, \texttt{act\_only} baseline is clearly insufficient on HEAD20. Second, the top conditions share a common property: they either restart earlier or diversify attempts. This points to a more general interpretation of HEAD: the weak model often needs help managing trajectory length and error persistence, not just more reasoning tokens.
 
-The broader ranking reinforces this interpretation. Plain baseline ordering is modestly separated---\texttt{act\_only} at 25\%, \texttt{reflexion} at 30\%, and \texttt{react} at 35\%---but none of these baseline moves is decisive on its own. The strongest conditions are the paired interventions that either cut off unproductive trajectories early (\texttt{early\_stop\_restart}) or allocate budget across multiple independent attempts (\texttt{self\_consistency}). The bottom of the ranking is also informative: \texttt{reflexion + checklist} falls to 20\% despite using the heaviest protocol, which argues against a simple ``more reasoning is better'' interpretation. On this subset, weak-model performance depends more on how the run budget is structured than on protocol label alone.
+The broader ranking in Appendix Table~\ref{tab:fullprotocols} reinforces this interpretation. Plain baseline ordering is modestly separated---\texttt{act\_only} at 25\%, \texttt{reflexion} at 30\%, and \texttt{react} at 35\%---but none of these baseline moves is decisive on its own. The strongest conditions are the paired interventions that either cut off unproductive trajectories early (\texttt{early\_stop\_restart}) or allocate budget across multiple independent attempts (\texttt{self\_consistency}). The bottom of the ranking is also informative: \texttt{reflexion + checklist} falls to 20\% despite using the heaviest protocol, which argues against a simple ``more reasoning is better'' interpretation. On this subset, weak-model performance depends more on how the run budget is structured than on protocol label alone.
 
 \subsection{Trajectory aggregates indicate failure to converge rather than failure to start}
 
@@ -229,7 +229,7 @@ Condition & Pass rate & Avg.\ tokens \\
 
 The ablation does not reproduce a clear aggregate Reflexion-over-ReAct advantage. Reflexion baseline ties ReAct baseline at 8/20, and neither two-episode condition produces an \texttt{Ep1 fail $\rightarrow$ Ep2 pass} rescue. Meanwhile, clean restart without reflection is both weaker and more expensive. The most conservative interpretation is therefore negative: in the current matched batch, Episode 2 is not a demonstrated positive contributor, and clean restart alone is not the source of any gain.
 
-This is substantively different from saying that Reflexion never helps. The narrower claim supported here is that the observed gains on HEAD20 are better explained by trajectory management than by a stable second-episode rescue mechanism. If Reflexion helps on this subset, it does so through a more entangled interaction with search control than through a reliable ``fail once, reflect, and recover'' pattern.
+This is substantively different from saying that Reflexion never helps. The narrower claim supported here is that the observed gains on HEAD20 are better explained by trajectory management than by a stable second-episode rescue mechanism. Appendix Table~\ref{tab:ablationdetail} and its accompanying readouts show the same pattern at slightly finer granularity. If Reflexion helps on this subset, it does so through a more entangled interaction with search control than through a reliable ``fail once, reflect, and recover'' pattern.
 
 \subsection{The HEAD subset transfers to a different model family}
 
@@ -251,7 +251,7 @@ QuixBugs & 5/9 (55.6\%) & 29{,}531 \\
 \end{tabular}
 \end{table}
 
-This is not a redefinition of HEAD; Mistral remains the definition model. Instead, Scout acts as an external check on whether the same subset is still difficult for another family. The answer is yes. In particular, the complete failure on Mini-nightmare suggests that the hardest part of HEAD20 is not just an artifact of one model API or one prompt family. The task-level successes are also informative: Scout primarily recovers QuixBugs and a few narrow DebugBench cases, while the more structurally demanding failures remain concentrated in the same region where Mistral hint response is weakest.
+This is not a redefinition of HEAD; Mistral remains the definition model. Instead, Scout acts as an external check on whether the same subset is still difficult for another family. The answer is yes. In particular, the complete failure on Mini-nightmare suggests that the hardest part of HEAD20 is not just an artifact of one model API or one prompt family. The task-level list in the appendix is consistent with the family totals in Table~\ref{tab:scout}: five of the eight Scout successes come from QuixBugs, three come from DebugBench, and none come from Mini-nightmare.
 
 \section{Discussion}
 
